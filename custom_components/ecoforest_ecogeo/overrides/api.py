@@ -312,6 +312,8 @@ class EcoGeoApi(EcoforestApi):
         if model_name in HP_MODELS:
             self._MAPPING = HP_MAPPING
             self._REQUESTS = HP_REQUESTS
+            # also need to update global MAPPINGfor use in other files import these
+            MAPPING = HP_MAPPING
         else:
             _LOGGER.warning("Unknown model name: %s, defaulting to standard mapping", model_name)
 
