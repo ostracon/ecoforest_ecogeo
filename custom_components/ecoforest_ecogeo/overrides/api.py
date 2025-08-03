@@ -37,7 +37,14 @@ def _slugify(name: str) -> str:
 
 _ENTITY_TYPE_OVERRIDES = {
     "power_kw": ["ElecConsumptPwr"],
-    "energy_mwh": ["Annual condensation", "Annual evaporation", "Annual electrical"],
+    "energy_mwh": [
+        "Annual condensation",
+        "Annual evaporation",
+        "Annual electrical",
+        "Electric consumption",
+        "Heating production",
+        "Cooling production",
+    ],
 }
 
 

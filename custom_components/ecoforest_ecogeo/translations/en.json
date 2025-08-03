@@ -1034,8 +1034,8 @@
       "trp_brine_inlet_temperature": {
         "name": "TRP Brine inlet temperature"
       },
-      "trpis_pool_return_temperature": {
-        "name": "TRPis Pool return temperature"
+      "pool_return_temperature": {
+        "name": "Pool return temperature"
       },
       "tset_calef_1_final_heating_setpoint_dg1": {
         "name": "TSet_Calef_1 Final heating setpoint DG1"
