@@ -268,6 +268,7 @@ HP_REQUESTS = {
 }
 
 HP_MAPPING = {
+    # analog inputs
     "t_brine_out":   dict(data_type=DataTypes.Register, type="float",  address=1,   entity_type="temperature"),
     "t_brine_in":    dict(data_type=DataTypes.Register, type="float",  address=2,   entity_type="temperature"),
     "p_brine":       dict(data_type=DataTypes.Register, type="float",  address=3,   entity_type="pressure"),
@@ -279,6 +280,7 @@ HP_MAPPING = {
     "t_dhw":         dict(data_type=DataTypes.Register, type="float",  address=11,  entity_type="temperature"),
     "t_pool":        dict(data_type=DataTypes.Register, type="float",  address=19,  entity_type="temperature"),
     "t_outdoor":     dict(data_type=DataTypes.Register, type="float",  address=20,  entity_type="temperature"),
+    # power/COP/etc
     "power_heating": dict(data_type=DataTypes.Register, type="int",    address=133, entity_type="power"),
     "power_cooling": dict(data_type=DataTypes.Register, type="int",    address=134, entity_type="power"),
     "power_electric":dict(data_type=DataTypes.Register, type="int",    address=135, entity_type="power"),

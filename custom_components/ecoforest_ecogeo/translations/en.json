@@ -92,9 +92,6 @@
       "t_dg1_h": {
         "name": "DG1 Heating temperature"
       },
-      "t_dg1_c": {
-        "name": "DG1 Cooling temperature"
-      },
       "t_sg2": {
         "name": "SG2 temperature"
       },
