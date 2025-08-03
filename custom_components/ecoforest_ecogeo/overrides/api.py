@@ -44,6 +44,7 @@ def _infer_entity_type(name: str) -> str:
     POWER_TERMS = ["power", "capacity", "PF", "cop", "consumption", "production"]
     if any(term.lower() in n.lower() for term in POWER_TERMS):
         return "power"
+    # TODO - some are 'energy' not power
     return "measurement"
 
 
