@@ -11,8 +11,11 @@ _LOGGER = logging.getLogger(__name__)
 MODEL_ADDRESS = 5323
 MODEL_LENGTH = 6
 
+# Get/set bit
 OP_TYPE_GET_SWITCH = 2001
 OP_TYPE_SET_SWITCH = 2011
+ 
+ #Get/set number
 OP_TYPE_GET_REGISTER = 2002
 OP_TYPE_SET_REGISTER = 2012
 
@@ -251,6 +254,40 @@ MAPPING = {
 }
 
 
+HP_MODELS = {"EATM00"}        # add others if needed
+
+HP_REQUESTS = {
+    DataTypes.Register: [
+        {"address": 1, "length": 40},      # 1‑40 analogue block
+        {"address": 123, "length": 20},    # set‑points
+        {"address": 133, "length": 10},    # power/COP/PF
+    ],
+    DataTypes.Coil: [
+        {"address": 21, "length": 20},     # pump states etc.
+    ]
+}
+
+HP_MAPPING = {
+    "t_brine_out":   dict(data_type=DataTypes.Register, type="float",  address=1,   entity_type="temperature"),
+    "t_brine_in":    dict(data_type=DataTypes.Register, type="float",  address=2,   entity_type="temperature"),
+    "p_brine":       dict(data_type=DataTypes.Register, type="float",  address=3,   entity_type="pressure"),
+    "t_dg1_h":       dict(data_type=DataTypes.Register, type="float",  address=4,   entity_type="temperature"),
+    "t_dg1_return":  dict(data_type=DataTypes.Register, type="float",  address=5,   entity_type="temperature"),
+    "p_output":      dict(data_type=DataTypes.Register, type="float",  address=6,   entity_type="pressure"),
+    "t_heating":     dict(data_type=DataTypes.Register, type="float",  address=17,  entity_type="temperature"),
+    "t_cooling":     dict(data_type=DataTypes.Register, type="float",  address=18,  entity_type="temperature"),
+    "t_dhw":         dict(data_type=DataTypes.Register, type="float",  address=11,  entity_type="temperature"),
+    "t_pool":        dict(data_type=DataTypes.Register, type="float",  address=19,  entity_type="temperature"),
+    "t_outdoor":     dict(data_type=DataTypes.Register, type="float",  address=20,  entity_type="temperature"),
+    "power_heating": dict(data_type=DataTypes.Register, type="int",    address=133, entity_type="power"),
+    "power_cooling": dict(data_type=DataTypes.Register, type="int",    address=134, entity_type="power"),
+    "power_electric":dict(data_type=DataTypes.Register, type="int",    address=135, entity_type="power"),
+    "power_output":  dict(data_type=DataTypes.Register, type="custom", entity_type="power",
+                           value_fn=lambda d, _: d["power_heating"] + d["power_cooling"]),
+    "cop":           dict(data_type=DataTypes.Register, type="float",  address=136, entity_type="measurement"),
+    "pf":            dict(data_type=DataTypes.Register, type="float",  address=138, entity_type="measurement"),
+}
+
 class EcoGeoApi(EcoforestApi):
     def __init__(
         self,
@@ -259,16 +296,33 @@ class EcoGeoApi(EcoforestApi):
         password: str
     ) -> None:
         super().__init__(host, httpx.BasicAuth(user, password))
+        self._MAPPING = MAPPING
 
     async def get(self) -> EcoGeoDevice:
         state = {DataTypes.Coil: {}, DataTypes.Register: {}}
 
+        # Before we proceed, need to get the model name
+        model_name = await self._load_data(MODEL_ADDRESS, MODEL_LENGTH, Operations.Get[DataTypes.Register])
+        # parse it using similar code as parse_model_name, but using the model_dictionary
+        model_dictionary = ["--"] + [*string.digits] + [*string.ascii_uppercase]
+        model_name = ''.join([model_dictionary[self.parse_ecoforest_int(x)] for x in model_name.values()])
+
+        _LOGGER.debug("Model name: %s", model_name)
+
+        if model_name in HP_MODELS:
+            self._MAPPING = HP_MAPPING
+            self._REQUESTS = HP_REQUESTS
+        else:
+            _LOGGER.warning("Unknown model name: %s, defaulting to standard mapping", model_name)
+
+
         for dt in [DataTypes.Coil, DataTypes.Register]:
-            for request in REQUESTS[dt]:
+            for request in self._REQUESTS[dt]:
+                _LOGGER.debug("Getting: addr:%s len:%s …", request["address"], request["length"])
                 state[dt].update(await self._load_data(request["address"], request["length"], Operations.Get[dt]))
 
         device_info = {}
-        for name, definition in MAPPING.items():
+        for name, definition in self._MAPPING.items():
             match definition["type"]:
                 case "int":
                     value = self.parse_ecoforest_int(state[definition["data_type"]][definition["address"]])
@@ -284,7 +338,7 @@ class EcoGeoApi(EcoforestApi):
 
             device_info[name] = value
 
-        for name, definition in MAPPING.items():
+        for name, definition in self._MAPPING.items():
             if definition["entity_type"] == "temperature":
                 if device_info[name] == -999.9:
                     device_info[name] = None
@@ -316,22 +370,22 @@ class EcoGeoApi(EcoforestApi):
         return result
 
     async def turn_switch(self, name, on: bool | None = False) -> EcoGeoDevice:
-        if name not in MAPPING.keys():
+        if name not in self._MAPPING.keys():
             raise Exception("unknown switch")
 
         await self._request(
-            data={"idOperacion": OP_TYPE_SET_SWITCH, "dir": MAPPING[name]["address"], "num": 1, int(on): int(on)}
+            data={"idOperacion": OP_TYPE_SET_SWITCH, "dir": self._MAPPING[name]["address"], "num": 1, int(on): int(on)}
         )
         return await self.get()
 
     async def set_numeric_value(self, name, value: float) -> EcoGeoDevice:
-        if name not in MAPPING.keys():
+        if name not in self._MAPPING.keys():
             raise Exception("unknown register")
 
         converted_value = self.convert_to_ecoforest_int(value)
 
         await self._request(
-            data={"idOperacion": OP_TYPE_SET_REGISTER, "dir": MAPPING[name]["address"], "num": 1, converted_value: converted_value}
+            data={"idOperacion": OP_TYPE_SET_REGISTER, "dir": self._MAPPING[name]["address"], "num": 1, converted_value: converted_value}
         )
         return await self.get()
 
