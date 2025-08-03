@@ -86,6 +86,9 @@
       "t_heating": {
         "name": "Heating Tank temperature"
       },
+      "t_pool": {
+        "name": "Pool temperature"
+      },
       "t_dg1_h": {
         "name": "DG1 Heating temperature"
       },

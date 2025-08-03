@@ -98,6 +98,12 @@ MAPPING = {
         "address": 11,
         "entity_type": "temperature"
     },
+    "t_pool": {
+        "data_type": DataTypes.Register,
+        "type": "float",
+        "address": 19,
+        "entity_type": "temperature"
+    },
     "power_heating": {
         "data_type": DataTypes.Register,
         "type": "int",
@@ -292,6 +298,7 @@ class EcoGeoApi(EcoforestApi):
         return EcoGeoDevice.build(self.parse_model_name(state), device_info)
 
     async def _load_data(self, address, length, op_type) -> dict[int, str]:
+        _LOGGER.info(f"Loading data: {address} {length} {op_type}")
         response = await self._request(
             data={
                 "idOperacion": op_type,
