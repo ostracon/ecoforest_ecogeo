@@ -3,7 +3,7 @@ import logging
 import re
 import string
 from pathlib import Path
-
+import asyncio
 import httpx
 from pyecoforest.api import EcoforestApi
 
