@@ -1,9 +1,10 @@
+import asyncio
 import json
 import logging
 import re
 import string
 from pathlib import Path
-import asyncio
+
 import httpx
 from pyecoforest.api import EcoforestApi
 
@@ -14,19 +15,24 @@ _LOGGER = logging.getLogger(__name__)
 MODEL_ADDRESS = 5323
 MODEL_LENGTH = 6
 
+
 class DataTypes:
     Register = 1
     Coil = 2
 
+
 class Operations:
     Get = {DataTypes.Coil: 2001, DataTypes.Register: 2002}
+
 
 # ---------------------------------------------------------------------------
 # Mapping helpers
 # ---------------------------------------------------------------------------
 
+
 def _slugify(name: str) -> str:
     return re.sub(r"[^a-z0-9]+", "_", name.lower()).strip("_")
+
 
 def _infer_entity_type(name: str) -> str:
     n = name.lower()
@@ -39,6 +45,7 @@ def _infer_entity_type(name: str) -> str:
         return "power"
     return "measurement"
 
+
 def _build_mapping(block: dict) -> dict:
     mapping: dict[str, dict] = {}
     for item in block.get("analog", []):
@@ -50,7 +57,7 @@ def _build_mapping(block: dict) -> dict:
             "entity_type": _infer_entity_type(item["name"]),
         }
 
-    # Some integers are actually floats, depends on the inferred entity type for now    
+    # Some integers are actually floats, depends on the inferred entity type for now
     for item in block.get("integer", []):
         inferred_type = _infer_entity_type(item["name"])
         if inferred_type in ("power", "temperature"):
@@ -74,6 +81,7 @@ def _build_mapping(block: dict) -> dict:
         }
     return mapping
 
+
 def _build_requests(mapping: dict) -> dict:
     requests = {DataTypes.Register: [], DataTypes.Coil: []}
     for dt in [DataTypes.Register, DataTypes.Coil]:
@@ -91,8 +99,11 @@ def _build_requests(mapping: dict) -> dict:
         requests[dt].append({"address": start, "length": prev - start + 1})
     return requests
 
+
 # Load modbus information and build mappings for domestic and HP models
-with open(Path(__file__).resolve().parent.parent / "modbus_info.json", "r", encoding="utf-8") as f:
+with open(
+    Path(__file__).resolve().parent.parent / "modbus_info.json", "r", encoding="utf-8"
+) as f:
     _info = json.load(f)
 _DOMESTIC_MAPPING = _build_mapping(_info["ecoGEO_domestic"])
 _HP_MAPPING = _build_mapping(_info["ecoGEO_HP"])
@@ -106,6 +117,7 @@ HP_MODELS = {"EATM00"}
 # ---------------------------------------------------------------------------
 # API implementation
 # ---------------------------------------------------------------------------
+
 
 class EcoGeoApi(EcoforestApi):
     def __init__(self, host: str, user: str, password: str) -> None:
@@ -149,16 +161,20 @@ class EcoGeoApi(EcoforestApi):
                 for i in range(3):
                     try:
                         state[dt].update(
-                            await self._load_data(request["address"], request["length"], Operations.Get[dt])
+                            await self._load_data(
+                                request["address"],
+                                request["length"],
+                                Operations.Get[dt],
+                            )
                         )
                         break
                     except Exception as e:
                         print(f"Error: {e}, sleeping for {2 ** i} seconds")
                         # i = 4 here to ensure we sleep for a good amount of time if something went wrong or the HP is busy
                         if i < 4:
-                            await asyncio.sleep(2 ** i)
+                            await asyncio.sleep(2**i)
                         else:
-                            raise   
+                            raise
 
         device_info: dict[str, any] = {}
         for name, definition in self._MAPPING.items():
@@ -184,16 +200,12 @@ class EcoGeoApi(EcoforestApi):
 
     async def _load_data(self, address, length, op_type) -> dict[int, str]:
         response = await self._request(
-            data={
-                "idOperacion": op_type,
-                "dir": address,
-                "num": length
-            }
+            data={"idOperacion": op_type, "dir": address, "num": length}
         )
 
         result = {}
         index = 0
-        for i in range(address, address+length):
+        for i in range(address, address + length):
             result[i] = response[index]
             index += 1
 
@@ -201,13 +213,22 @@ class EcoGeoApi(EcoforestApi):
 
     def _parse(self, response: str) -> list[str]:
         # Override default parse to get the proper data out
-        lines = response.split('\n')
+        lines = response.split("\n")
 
-        a, b = lines[0].split('=')
-        if a not in ["error_geo_get_reg", "error_geo_get_bit", "error_geo_set_reg", "error_geo_set_bit"] or b != "0":
+        a, b = lines[0].split("=")
+        if (
+            a
+            not in [
+                "error_geo_get_reg",
+                "error_geo_get_bit",
+                "error_geo_set_reg",
+                "error_geo_set_bit",
+            ]
+            or b != "0"
+        ):
             raise Exception("bad response: {}".format(response))
 
-        return lines[1].split('&')[2:]
+        return lines[1].split("&")[2:]
 
     def parse_ecoforest_int(self, value):
         result = int(value, 16)
@@ -218,4 +239,3 @@ class EcoGeoApi(EcoforestApi):
 
     def parse_ecoforest_float(self, value):
         return self.parse_ecoforest_int(value) / 10
-
