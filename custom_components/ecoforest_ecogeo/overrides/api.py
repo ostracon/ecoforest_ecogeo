@@ -4,6 +4,7 @@ import logging
 import re
 import string
 from pathlib import Path
+from typing import Any
 
 import httpx
 from pyecoforest.api import EcoforestApi
@@ -176,7 +177,7 @@ class EcoGeoApi(EcoforestApi):
                         else:
                             raise
 
-        device_info: dict[str, any] = {}
+        device_info: dict[str, Any] = {}
         for name, definition in self._MAPPING.items():
             try:
                 raw = state[definition["data_type"]][definition["address"]]
