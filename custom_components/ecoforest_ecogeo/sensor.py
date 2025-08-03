@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import logging
-from functools import cached_property
 
 from homeassistant.components.sensor import (
     SensorDeviceClass,
@@ -21,7 +20,7 @@ from .const import DOMAIN
 from .coordinator import EcoforestCoordinator
 from .entity import EcoforestEntity, EcoforestSensorEntityDescription
 from .overrides.device import EcoGeoDevice
-from .overrides.api import MAPPING
+from .overrides import api as api_module
 from .entity import SENSOR_TYPES
 
 _LOGGER = logging.getLogger(__name__)
@@ -34,8 +33,11 @@ async def async_setup_entry(
     coordinator: EcoforestCoordinator = hass.data[DOMAIN][config_entry.entry_id]
 
     device_alias = config_entry.data[CONF_ALIAS] if CONF_ALIAS in config_entry.data else None
+    mapping = api_module.MAPPING
     entities = [
-        EcoforestSensor(coordinator, key, definition, device_alias) for key, definition in MAPPING.items() if definition["entity_type"] in SENSOR_TYPES.keys()
+        EcoforestSensor(coordinator, key, definition, device_alias)
+        for key, definition in mapping.items()
+        if definition["entity_type"] in SENSOR_TYPES.keys()
     ]
 
     async_add_entities(entities)
