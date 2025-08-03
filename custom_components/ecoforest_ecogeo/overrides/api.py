@@ -1,5 +1,8 @@
-import string, logging
-from dataclasses import dataclass
+import json
+import logging
+import re
+import string
+from pathlib import Path
 
 import httpx
 from pyecoforest.api import EcoforestApi
@@ -11,413 +14,162 @@ _LOGGER = logging.getLogger(__name__)
 MODEL_ADDRESS = 5323
 MODEL_LENGTH = 6
 
-# Get/set bit
-OP_TYPE_GET_SWITCH = 2001
-OP_TYPE_SET_SWITCH = 2011
- 
- #Get/set number
-OP_TYPE_GET_REGISTER = 2002
-OP_TYPE_SET_REGISTER = 2012
-
 class DataTypes:
     Register = 1
     Coil = 2
 
 class Operations:
     Get = {DataTypes.Coil: 2001, DataTypes.Register: 2002}
-    Set = {DataTypes.Coil: 2011, DataTypes.Register: 2012}
 
-REQUESTS = {
-    DataTypes.Coil : [
-        {"address": 1, "length": 41},
-        {"address": 57, "length": 27},
-        {"address": 105, "length": 3},
-        {"address": 212, "length": 15},
-    ],
+# ---------------------------------------------------------------------------
+# Mapping helpers
+# ---------------------------------------------------------------------------
 
-    DataTypes.Register: [
-        {"address": 1, "length": 31},
-        {"address": 59, "length": 1},
-        {"address": 194, "length": 8},
-        {"address": 5066, "length": 18},
-        {"address": 5185, "length": 1},
+def _slugify(name: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "_", name.lower()).strip("_")
 
-        {"address": MODEL_ADDRESS, "length": MODEL_LENGTH, "op": OP_TYPE_GET_REGISTER},
-    ]
-}
+def _infer_entity_type(name: str) -> str:
+    n = name.lower()
+    if "temperature" in n:
+        return "temperature"
+    if "pressure" in n:
+        return "pressure"
+    if "power" in n or "capacity" in n:
+        return "power"
+    return "measurement"
 
-MAPPING = {
-    "t_heating": {
-        "data_type": DataTypes.Register,
-        "type": "float",
-        "address": 200,
-        "entity_type": "temperature"
-    },
-    "t_cooling": {
-        "data_type": DataTypes.Register,
-        "type": "float",
-        "address": 201,
-        "entity_type": "temperature"
-    },
-    "t_dhw": {
-        "data_type": DataTypes.Register,
-        "type": "float",
-        "address": 8,
-        "entity_type": "temperature"
-    },
-    "t_dg1_h": {
-        "data_type": DataTypes.Register,
-        "type": "float",
-        "address": 3,
-        "entity_type": "temperature"
-    },
-    "t_dg1_c": {
-        "data_type": DataTypes.Register,
-        "type": "float",
-        "address": 197,
-        "entity_type": "temperature"
-    },
-    "t_sg2": {
-        "data_type": DataTypes.Register,
-        "type": "float",
-        "address": 194,
-        "entity_type": "temperature"
-    },
-    "t_sg3": {
-        "data_type": DataTypes.Register,
-        "type": "float",
-        "address": 195,
-        "entity_type": "temperature"
-    },
-    "t_sg4": {
-        "data_type": DataTypes.Register,
-        "type": "float",
-        "address": 196,
-        "entity_type": "temperature"
-    },
-    "t_outdoor": {
-        "data_type": DataTypes.Register,
-        "type": "float",
-        "address": 11,
-        "entity_type": "temperature"
-    },
-    "t_pool": {
-        "data_type": DataTypes.Register,
-        "type": "float",
-        "address": 19,
-        "entity_type": "temperature"
-    },
-    "power_heating": {
-        "data_type": DataTypes.Register,
-        "type": "int",
-        "address": 5083,
-        "entity_type": "power"
-    },
-    "power_cooling": {
-        "data_type": DataTypes.Register,
-        "type": "int",
-        "address": 5185,
-        "entity_type": "power"
-    },
-    "power_electric": {
-        "data_type": DataTypes.Register,
-        "type": "int",
-        "address": 5082,
-        "entity_type": "power"
-    },
-    "power_output": {
-        "data_type": DataTypes.Register,
-        "type": "custom",
-        "entity_type": "power",
-        "value_fn": lambda data, raw: data["power_cooling"] + data["power_heating"]
-    },
-    "t_brine_in": {
-        "data_type": DataTypes.Register,
-        "type": "float",
-        "address": 2,
-        "entity_type": "temperature"
-    },
-    "t_brine_out": {
-        "data_type": DataTypes.Register,
-        "type": "float",
-        "address": 1,
-        "entity_type": "temperature"
-    },
-    "p_brine": {
-        "data_type": DataTypes.Register,
-        "type": "float",
-        "address": 13,
-        "entity_type": "pressure"
-    },
-    "p_output": {
-        "data_type": DataTypes.Register,
-        "type": "float",
-        "address": 14,
-        "entity_type": "pressure"
-    },
-    "cop": {
-        "data_type": DataTypes.Register,
-        "type": "float",
-        "address": 30,
-        "entity_type": "measurement"
-    },
-    "pf": {
-        "data_type": DataTypes.Register,
-        "type": "float",
-        "address": 31,
-        "entity_type": "measurement"
-    },
-    "switch_heating": {
-        "data_type": DataTypes.Coil,
-        "type": "boolean",
-        "address": 105,
-        "entity_type": "switch"
-    },
-    "switch_cooling": {
-        "data_type": DataTypes.Coil,
-        "type": "boolean",
-        "address": 107,
-        "entity_type": "switch"
-    },
-    "switch_dhw": {
-        "data_type": DataTypes.Coil,
-        "type": "boolean",
-        "address": 106,
-        "entity_type": "switch"
-    },
-    "switch_dg1_output": {
-        "data_type": DataTypes.Coil,
-        "type": "boolean",
-        "address": 60,
-        "entity_type": "switch"
-    },
-    "switch_sg2_output": {
-        "data_type": DataTypes.Coil,
-        "type": "boolean",
-        "address": 57,
-        "entity_type": "switch"
-    },
-    "switch_pool_output": {
-        "data_type": DataTypes.Coil,
-        "type": "boolean",
-        "address": 65,
-        "entity_type": "switch"
-    },
-    "switch_pool_device_output": {
-        "data_type": DataTypes.Coil,
-        "type": "boolean",
-        "address": 61,
-        "entity_type": "switch"
-    },
-    "button_reset_alarms": {
-        "data_type": DataTypes.Coil,
-        "type": "boolean",
-        "address": 83,
-        "entity_type": "button"
-    },
-    "number_dhw_setpoint": {
-        "data_type": DataTypes.Register,
-        "type": "float",
-        "address": 17,
-        "entity_type": "temperature",
-        "is_number": True,
-        "min": 0,
-        "max": 65,
-        "step": 0.1
-    },
-    "number_dhw_dt_start": {
-        "data_type": DataTypes.Register,
-        "type": "float",
-        "address": 15,
-        "entity_type": "temperature",
-        "is_number": True,
-        "min": 2,
-        "max": 25,
-        "step": 0.1
-    },
-    "number_dhw_htr_set": {
-        "data_type": DataTypes.Register,
-        "type": "float",
-        "address": 59,
-        "entity_type": "temperature",
-        "is_number": True,
-        "min": 0,
-        "max": 70,
-        "step": 0.1
-    },
-    "alarm": {
-        "data_type": DataTypes.Coil,
-        "type": "custom",
-        "entity_type": "enum",
-        "value_fn": lambda data, raw_data: EcoGeoApi.get_alarm(raw_data)
-    }
-}
+def _build_mapping(block: dict) -> dict:
+    mapping: dict[str, dict] = {}
+    for item in block.get("analog", []):
+        key = _slugify(item["name"])
+        mapping[key] = {
+            "data_type": DataTypes.Register,
+            "type": "float",
+            "address": item["address"],
+            "entity_type": _infer_entity_type(item["name"]),
+        }
+    for item in block.get("integer", []):
+        key = _slugify(item["name"])
+        mapping[key] = {
+            "data_type": DataTypes.Register,
+            "type": "int",
+            "address": item["address"],
+            "entity_type": _infer_entity_type(item["name"]),
+        }
+    for item in block.get("boolean", []):
+        key = _slugify(item["name"])
+        mapping[key] = {
+            "data_type": DataTypes.Coil,
+            "type": "boolean",
+            "address": item["address"],
+            "entity_type": "measurement",
+        }
+    return mapping
 
+def _build_requests(mapping: dict) -> dict:
+    requests = {DataTypes.Register: [], DataTypes.Coil: []}
+    for dt in [DataTypes.Register, DataTypes.Coil]:
+        addresses = sorted(
+            [d["address"] for d in mapping.values() if d["data_type"] == dt]
+        )
+        if not addresses:
+            continue
+        start = prev = addresses[0]
+        for addr in addresses[1:]:
+            if addr != prev + 1:
+                requests[dt].append({"address": start, "length": prev - start + 1})
+                start = addr
+            prev = addr
+        requests[dt].append({"address": start, "length": prev - start + 1})
+    return requests
 
-HP_MODELS = {"EATM00"}        # add others if needed
+# Load modbus information and build mappings for domestic and HP models
+with open(Path(__file__).resolve().parent.parent / "modbus_info.json", "r", encoding="utf-8") as f:
+    _info = json.load(f)
+_DOMESTIC_MAPPING = _build_mapping(_info["ecoGEO_domestic"])
+_HP_MAPPING = _build_mapping(_info["ecoGEO_HP"])
+_DOMESTIC_REQUESTS = _build_requests(_DOMESTIC_MAPPING)
+_HP_REQUESTS = _build_requests(_HP_MAPPING)
 
-HP_REQUESTS = {
-    DataTypes.Register: [
-        {"address": 1, "length": 40},      # 1‑40 analogue block
-        {"address": 123, "length": 20},    # set‑points
-        {"address": 133, "length": 10},    # power/COP/PF
-    ],
-    DataTypes.Coil: [
-        {"address": 21, "length": 20},     # pump states etc.
-    ]
-}
+MAPPING = _DOMESTIC_MAPPING
 
-HP_MAPPING = {
-    # analog inputs
-    "t_brine_out":   dict(data_type=DataTypes.Register, type="float",  address=1,   entity_type="temperature"),
-    "t_brine_in":    dict(data_type=DataTypes.Register, type="float",  address=2,   entity_type="temperature"),
-    "p_brine":       dict(data_type=DataTypes.Register, type="float",  address=3,   entity_type="pressure"),
-    "t_dg1_h":       dict(data_type=DataTypes.Register, type="float",  address=4,   entity_type="temperature"),
-    "t_dg1_return":  dict(data_type=DataTypes.Register, type="float",  address=5,   entity_type="temperature"),
-    "p_output":      dict(data_type=DataTypes.Register, type="float",  address=6,   entity_type="pressure"),
-    "t_heating":     dict(data_type=DataTypes.Register, type="float",  address=17,  entity_type="temperature"),
-    "t_cooling":     dict(data_type=DataTypes.Register, type="float",  address=18,  entity_type="temperature"),
-    "t_dhw":         dict(data_type=DataTypes.Register, type="float",  address=11,  entity_type="temperature"),
-    "t_pool":        dict(data_type=DataTypes.Register, type="float",  address=19,  entity_type="temperature"),
-    "t_outdoor":     dict(data_type=DataTypes.Register, type="float",  address=20,  entity_type="temperature"),
-    # power/COP/etc
-    "power_heating": dict(data_type=DataTypes.Register, type="int",    address=133, entity_type="power"),
-    "power_cooling": dict(data_type=DataTypes.Register, type="int",    address=134, entity_type="power"),
-    "power_electric":dict(data_type=DataTypes.Register, type="int",    address=135, entity_type="power"),
-    "power_output":  dict(data_type=DataTypes.Register, type="custom", entity_type="power",
-                           value_fn=lambda d, _: d["power_heating"] + d["power_cooling"]),
-    "cop":           dict(data_type=DataTypes.Register, type="float",  address=136, entity_type="measurement"),
-    "pf":            dict(data_type=DataTypes.Register, type="float",  address=138, entity_type="measurement"),
-}
+HP_MODELS = {"EATM00"}
+
+# ---------------------------------------------------------------------------
+# API implementation
+# ---------------------------------------------------------------------------
 
 class EcoGeoApi(EcoforestApi):
-    def __init__(
-        self,
-        host: str,
-        user: str,
-        password: str
-    ) -> None:
+    def __init__(self, host: str, user: str, password: str) -> None:
         super().__init__(host, httpx.BasicAuth(user, password))
         self._MAPPING = MAPPING
+        self._REQUESTS = _DOMESTIC_REQUESTS
+        self._model_name: str | None = None
 
     async def get(self) -> EcoGeoDevice:
         state = {DataTypes.Coil: {}, DataTypes.Register: {}}
 
-        # Before we proceed, need to get the model name
-        model_name = await self._load_data(MODEL_ADDRESS, MODEL_LENGTH, Operations.Get[DataTypes.Register])
-        # parse it using similar code as parse_model_name, but using the model_dictionary
-        model_dictionary = ["--"] + [*string.digits] + [*string.ascii_uppercase]
-        model_name = ''.join([model_dictionary[self.parse_ecoforest_int(x)] for x in model_name.values()])
-
-        _LOGGER.debug("Model name: %s", model_name)
-
-        if model_name in HP_MODELS:
-            self._MAPPING = HP_MAPPING
-            self._REQUESTS = HP_REQUESTS
-            # also need to update global MAPPINGfor use in other files import these
-            MAPPING = HP_MAPPING
-        else:
-            _LOGGER.warning("Unknown model name: %s, defaulting to standard mapping", model_name)
-
+        if self._model_name is None:
+            model_data = await self._load_data(
+                MODEL_ADDRESS, MODEL_LENGTH, Operations.Get[DataTypes.Register]
+            )
+            model_dictionary = ["--"] + [*string.digits] + [*string.ascii_uppercase]
+            self._model_name = "".join(
+                [
+                    model_dictionary[self.parse_ecoforest_int(x)]
+                    for x in model_data.values()
+                ]
+            )
+            if self._model_name in HP_MODELS:
+                self._MAPPING = _HP_MAPPING
+                self._REQUESTS = _HP_REQUESTS
+            else:
+                self._MAPPING = _DOMESTIC_MAPPING
+                self._REQUESTS = _DOMESTIC_REQUESTS
+            global MAPPING
+            MAPPING = self._MAPPING
 
         for dt in [DataTypes.Coil, DataTypes.Register]:
             for request in self._REQUESTS[dt]:
-                _LOGGER.debug("Getting: addr:%s len:%s …", request["address"], request["length"])
-                state[dt].update(await self._load_data(request["address"], request["length"], Operations.Get[dt]))
+                _LOGGER.debug(
+                    "Getting: addr:%s len:%s …", request["address"], request["length"]
+                )
+                state[dt].update(
+                    await self._load_data(request["address"], request["length"], Operations.Get[dt])
+                )
 
-        device_info = {}
+        device_info: dict[str, any] = {}
         for name, definition in self._MAPPING.items():
+            try:
+                raw = state[definition["data_type"]][definition["address"]]
+            except KeyError:
+                continue
             match definition["type"]:
                 case "int":
-                    value = self.parse_ecoforest_int(state[definition["data_type"]][definition["address"]])
+                    value = self.parse_ecoforest_int(raw)
                 case "float":
-                    value = self.parse_ecoforest_float(state[definition["data_type"]][definition["address"]])
+                    value = self.parse_ecoforest_float(raw)
                 case "boolean":
-                    value = self.parse_ecoforest_bool(state[definition["data_type"]][definition["address"]])
-                case "custom":
-                    continue
+                    value = self.parse_ecoforest_bool(raw)
                 case _:
-                    _LOGGER.error("unknown entity type for %s", name)
                     continue
-
+            if definition["entity_type"] == "temperature" and value == -999.9:
+                value = None
             device_info[name] = value
 
-        for name, definition in self._MAPPING.items():
-            if definition["entity_type"] == "temperature":
-                if device_info[name] == -999.9:
-                    device_info[name] = None
-
-            if definition["type"] != "custom":
-                continue
-            device_info[name] = definition["value_fn"](device_info, state)
-
         _LOGGER.debug(device_info)
-        _LOGGER.debug(state)
-        return EcoGeoDevice.build(model_name, device_info)
+        return EcoGeoDevice.build(self._model_name, device_info)
 
     async def _load_data(self, address, length, op_type) -> dict[int, str]:
-        _LOGGER.info(f"Loading data: {address} {length} {op_type}")
         response = await self._request(
-            data={
-                "idOperacion": op_type,
-                "dir": address,
-                "num": length
-            }
+            data={"idOperacion": op_type, "dir": address, "num": length}
         )
-
         result = {}
         index = 0
-        for i in range(address, address+length):
+        for i in range(address, address + length):
             result[i] = response[index]
             index += 1
-
         return result
-
-    async def turn_switch(self, name, on: bool | None = False) -> EcoGeoDevice:
-        if name not in self._MAPPING.keys():
-            raise Exception("unknown switch")
-
-        await self._request(
-            data={"idOperacion": OP_TYPE_SET_SWITCH, "dir": self._MAPPING[name]["address"], "num": 1, int(on): int(on)}
-        )
-        return await self.get()
-
-    async def set_numeric_value(self, name, value: float) -> EcoGeoDevice:
-        if name not in self._MAPPING.keys():
-            raise Exception("unknown register")
-
-        converted_value = self.convert_to_ecoforest_int(value)
-
-        await self._request(
-            data={"idOperacion": OP_TYPE_SET_REGISTER, "dir": self._MAPPING[name]["address"], "num": 1, converted_value: converted_value}
-        )
-        return await self.get()
-
-    def _parse(self, response: str) -> list[str]:
-        lines = response.split('\n')
-
-        a, b = lines[0].split('=')
-        if a not in ["error_geo_get_reg", "error_geo_get_bit", "error_geo_set_reg", "error_geo_set_bit"] or b != "0":
-            raise Exception("bad response: {}".format(response))
-
-        return lines[1].split('&')[2:]
-
-    def parse_model_name(self, data):
-        model_dictionary = ["--"] + [*string.digits] + [*string.ascii_uppercase]
-
-        result = ''
-        for address in range(MODEL_ADDRESS, MODEL_ADDRESS + MODEL_LENGTH):
-            result += model_dictionary[self.parse_ecoforest_int(data[DataTypes.Register][address])]
-
-        return result
-
-    def convert_to_ecoforest_int(self, value):
-        value = int(value * 10)
-
-        if value < 0:
-            value += 65536
-
-        return ("0000" + hex(value)[2:])[-4:]
 
     def parse_ecoforest_int(self, value):
         result = int(value, 16)
@@ -428,58 +180,3 @@ class EcoGeoApi(EcoforestApi):
 
     def parse_ecoforest_float(self, value):
         return self.parse_ecoforest_int(value) / 10
-
-    def get_alarm(data):
-        alarm_registers = [
-            1,	#Clock Board fault or not connected
-            2,	#Extended memory fault
-            3,	#Low outdoor temp. & Low ground temp.
-            7,	#AI3 Probe failure. Compressor discharge pressure
-            8,	#AI4 Probe failure. Brine outlet temperature
-            9,	#AI5 Probe failure. Brine return temperature
-            10,	#AI6 Probe failure. Brine circuit pressure
-            11,	#AI7 Probe failure. Heating outlet temperature
-            12,	#AI8 Probe failure. Heating inlet temperature
-            13,	#AI9 Probe failure. Heating circuit pressure
-            14,	#AI10 Probe failure. Tank temperature 1 (DHW)
-            15,	#AI11 Probe failure. Outdoor temperature probe
-            16,	#AI12 Probe fault
-            17,	#Low brine inlet temperature
-            18,	#High discharge pressure
-            19,	#High discharge temperature
-            20,	#Inverter temperature
-            21,	#Low brine outlet temperature
-            24,	#Ecogeo internal probes fault
-            25,	#Low pressure brine circuit
-            26,	#Low pressure Heating circuit
-            33,	#Evaporation temperature
-            34,	#Low suction pressure
-            36,	#AI2 Probe failure Compressor suction Pressure
-            37,	#AI1 Probe failure. Compressor suction temperature
-            38,	#Low superheat (lowSH)
-            39,	#Low evaporation temperature (LOP)
-            40,	#High evaporation temperature (MOP)
-            41,	#Low suction temperature
-            212,	#Inverter comms fault
-            213,	#High brine temperature
-            214,	#pCOe number:AI13 Analog input probe on channel 1 disconnected or broken
-            215,	#pCOe number:AI14 Analog input probe on channel 2 disconnected or broken
-            216,	#pCOe number:AI15 Analog input probe on channel 3 disconnected or broken
-            217,	#pCOe number:AI16 Analog input probe on channel 4 disconnected or broken
-            218,	#pCOe number: pCOe offline
-            219,	#th-T 1 Error (thermostat for DG1) **
-            220,	#th-T 1 offline (thermostat for DG1) **
-            221,	#th-T 2 Error (thermostat for SG2) **
-            222,	#th-T 2 offline (thermostat for SG2) **
-            223,	#th-T 3 Error (thermostat for SG3) **
-            224,	#th-T 3 offline (thermostat for SG3) **
-            225,	#th-T 4 Error (thermostat for SG4) **
-            226,	#th-T 4 offline (thermostat for SG4) **
-        ]
-
-        for address in alarm_registers:
-            if data[DataTypes.Coil][address] == "0":
-                continue
-            return address
-
-        return 0
