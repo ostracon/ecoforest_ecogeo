@@ -164,12 +164,7 @@ class EcoGeoApi(EcoforestApi):
         response = await self._request(
             data={"idOperacion": op_type, "dir": address, "num": length}
         )
-        result = {}
-        index = 0
-        for i in range(address, address + length):
-            result[i] = response[index]
-            index += 1
-        return result
+        return response
 
     def parse_ecoforest_int(self, value):
         result = int(value, 16)
