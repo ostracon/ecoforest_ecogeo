@@ -349,7 +349,7 @@ class EcoGeoApi(EcoforestApi):
 
         _LOGGER.debug(device_info)
         _LOGGER.debug(state)
-        return EcoGeoDevice.build(self.parse_model_name(state), device_info)
+        return EcoGeoDevice.build(model_name, device_info)
 
     async def _load_data(self, address, length, op_type) -> dict[int, str]:
         _LOGGER.info(f"Loading data: {address} {length} {op_type}")
