@@ -10,7 +10,12 @@ from homeassistant.components.sensor import (
     SensorEntityDescription,
     SensorStateClass,
 )
-from homeassistant.const import UnitOfTemperature, UnitOfPower, UnitOfPressure, UnitOfEnergy
+from homeassistant.const import (
+    UnitOfTemperature,
+    UnitOfPower,
+    UnitOfPressure,
+    UnitOfEnergy,
+)
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity import EntityDescription, generate_entity_id
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
@@ -28,7 +33,16 @@ SENSOR_TYPES = {
     },
     "pressure": {"class": SensorDeviceClass.PRESSURE, "unit": UnitOfPressure.BAR},
     "power": {"class": SensorDeviceClass.POWER, "unit": UnitOfPower.WATT},
+    "power_kw": {"class": SensorDeviceClass.POWER, "unit": UnitOfPower.KILO_WATT},
     "energy": {"class": SensorDeviceClass.ENERGY, "unit": UnitOfEnergy.WATT_HOUR},
+    "energy_kwh": {
+        "class": SensorDeviceClass.ENERGY,
+        "unit": UnitOfEnergy.KILO_WATT_HOUR,
+    },
+    "energy_mwh": {
+        "class": SensorDeviceClass.ENERGY,
+        "unit": UnitOfEnergy.MEGA_WATT_HOUR,
+    },
     "measurement": {"state_class": SensorStateClass.MEASUREMENT},
     "enum": {"class": SensorDeviceClass.ENUM},
 }

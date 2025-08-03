@@ -35,8 +35,19 @@ def _slugify(name: str) -> str:
     return re.sub(r"[^a-z0-9]+", "_", name.lower()).strip("_")
 
 
+_ENTITY_TYPE_OVERRIDES = {
+    "power_kw": ["ElecConsumptPwr"],
+    "energy_mwh": ["Annual condensation", "Annual evaporation", "Annual electrical"],
+}
+
+
 def _infer_entity_type(name: str) -> str:
     n = name.lower()
+
+    for override, names in _ENTITY_TYPE_OVERRIDES.items():
+        if any(name.lower() in n.lower() for name in names):
+            return override
+
     if "temperature" in n:
         return "temperature"
     if "pressure" in n:

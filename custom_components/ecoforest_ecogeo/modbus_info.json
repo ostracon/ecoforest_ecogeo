@@ -146,7 +146,7 @@
         {"address": 16,  "name": "TGI5 Supply temperature SG5",                 "rw": "R"},
         {"address": 17,  "name": "TIS Heating buffer-tank temperature",         "rw": "R"},
         {"address": 18,  "name": "TInF Cooling buffer-tank temperature",        "rw": "R"},
-        {"address": 19,  "name": "TRPis Pool return temperature",               "rw": "R"},
+        {"address": 19,  "name": "Pool return temperature",                     "rw": "R"},
         {"address": 20,  "name": "Outdoor temperature",                          "rw": "R"},
         {"address": 21,  "name": "TGI1 Supply temperature DG1",                 "rw": "R"},
         {"address": 22,  "name": "TIC_Gen Aux device outlet temperature",       "rw": "R"},
