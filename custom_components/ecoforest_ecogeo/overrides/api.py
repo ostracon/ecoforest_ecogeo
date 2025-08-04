@@ -36,7 +36,7 @@ def _slugify(name: str) -> str:
 
 
 _ENTITY_TYPE_OVERRIDES = {
-    "power_kw": ["ElecConsumptPwr"],
+    "power_kw": ["ElecConsumptPwr", "CondPwr", "EvapPwr"],
     "energy_mwh": [
         "Annual condensation",
         "Annual evaporation",
@@ -51,18 +51,26 @@ _ENTITY_TYPE_OVERRIDES = {
 def _infer_entity_type(name: str) -> str:
     n = name.lower()
 
+    # name selectors, including energy
     for override, names in _ENTITY_TYPE_OVERRIDES.items():
         if any(name.lower() in n.lower() for name in names):
             return override
 
-    if "temperature" in n:
+    # temperature readings
+    if "temperature" in n.lower() or "setpoint" in n.lower():
         return "temperature"
-    if "pressure" in n:
+
+    # pressure readings
+    if "pressure" in n.lower():
         return "pressure"
-    POWER_TERMS = ["power", "capacity", "PF", "cop", "consumption", "production"]
+
+    # power readings
+    POWER_TERMS = ["power", "capacity", "consumption", "production"]
     if any(term.lower() in n.lower() for term in POWER_TERMS):
         return "power"
-    # TODO - some are 'energy' not power
+
+    # COP and PF removed, these are just numbers
+    # DONE - some are 'energy' not power
     return "measurement"
 
 
