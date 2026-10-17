@@ -15,6 +15,7 @@ from homeassistant.const import (
     UnitOfPower,
     UnitOfPressure,
     UnitOfEnergy,
+    UnitOfTime,
 )
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity import EntityDescription, generate_entity_id
@@ -48,6 +49,10 @@ SENSOR_TYPES = {
     "percent": {"unit": "%"},
     "measurement": {"state_class": SensorStateClass.MEASUREMENT},
     "enum": {"class": SensorDeviceClass.ENUM},
+    "duration_min": {
+        "class": SensorDeviceClass.DURATION,
+        "unit": UnitOfTime.MINUTES,
+    },
 }
 
 

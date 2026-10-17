@@ -1314,7 +1314,7 @@
         "name": "SG5 room terminal type raw"
       },
       "compressor_delay_setting_raw": {
-        "name": "Compressor delay setting raw"
+        "name": "Compressor delay"
       },
       "heating_service_configured": {
         "name": "Heating service configured"
@@ -1995,10 +1995,10 @@
         "name": "SG5 heating emission system"
       },
       "building_insulation_selection_raw": {
-        "name": "Building insulation selection raw"
+        "name": "Building insulation selection"
       },
       "cooling_connection_type_raw": {
-        "name": "Cooling connection type raw"
+        "name": "Cooling connection type"
       },
       "dg1_cooling_emission_system": {
         "name": "DG1 cooling emission system"
