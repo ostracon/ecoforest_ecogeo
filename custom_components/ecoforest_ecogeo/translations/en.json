@@ -1507,6 +1507,351 @@
       },
       "thtune_zone_5_alarm": {
         "name": "THTune zone 5 alarm"
+      },
+      "floor_drying_current_phase_temperature": {
+        "name": "Floor drying current phase temperature"
+      },
+      "dhw_user_target": {
+        "name": "DHW user target"
+      },
+      "cooling_dt_supply": {
+        "name": "Cooling DT supply"
+      },
+      "dhw_legionella_setpoint": {
+        "name": "DHW legionella setpoint"
+      },
+      "production_pump_minimum_capacity": {
+        "name": "Production pump minimum capacity"
+      },
+      "production_pump_maximum_capacity": {
+        "name": "Production pump maximum capacity"
+      },
+      "brine_pump_minimum_capacity": {
+        "name": "Brine pump minimum capacity"
+      },
+      "brine_pump_maximum_capacity": {
+        "name": "Brine pump maximum capacity"
+      },
+      "minimum_brine_temperature": {
+        "name": "Minimum brine temperature"
+      },
+      "minimum_production_temperature_for_cooling": {
+        "name": "Minimum production temperature for cooling"
+      },
+      "minimum_brine_pressure": {
+        "name": "Minimum brine pressure"
+      },
+      "minimum_production_pressure": {
+        "name": "Minimum production pressure"
+      },
+      "automatic_summer_threshold": {
+        "name": "Automatic summer threshold"
+      },
+      "automatic_winter_threshold": {
+        "name": "Automatic winter threshold"
+      },
+      "cooling_dt_cooling": {
+        "name": "Cooling DT cooling"
+      },
+      "maximum_brine_temperature": {
+        "name": "Maximum brine temperature"
+      },
+      "cooling_dt_dew_point": {
+        "name": "Cooling DT dew point"
+      },
+      "dhw_dt_dhw": {
+        "name": "DHW DT DHW"
+      },
+      "e_manager_consumption_limit_setpoint": {
+        "name": "E-manager consumption limit setpoint"
+      },
+      "e_manager_surplus_balance_setpoint": {
+        "name": "E-manager surplus balance setpoint"
+      },
+      "e_manager_grid_consumption_power": {
+        "name": "E-manager grid consumption power"
+      },
+      "e_manager_grid_injection_power": {
+        "name": "E-manager grid injection power"
+      },
+      "e_manager_grid_control_actual_power": {
+        "name": "E-manager grid control actual power"
+      },
+      "dhw_production_pump_configured": {
+        "name": "DHW production pump configured"
+      },
+      "dhw_recirculation_pump_configured": {
+        "name": "DHW recirculation pump configured"
+      },
+      "active_cooling_production_pump_configured": {
+        "name": "Active cooling production pump configured"
+      },
+      "cooling_group_1_configured": {
+        "name": "Cooling group 1 configured"
+      },
+      "cooling_group_2_configured": {
+        "name": "Cooling group 2 configured"
+      },
+      "cooling_group_3_configured": {
+        "name": "Cooling group 3 configured"
+      },
+      "cooling_group_4_configured": {
+        "name": "Cooling group 4 configured"
+      },
+      "cooling_group_5_configured": {
+        "name": "Cooling group 5 configured"
+      },
+      "cooling_group_1_curve_selected": {
+        "name": "Cooling group 1 curve selected"
+      },
+      "cooling_group_2_curve_selected": {
+        "name": "Cooling group 2 curve selected"
+      },
+      "cooling_group_3_curve_selected": {
+        "name": "Cooling group 3 curve selected"
+      },
+      "cooling_group_4_curve_selected": {
+        "name": "Cooling group 4 curve selected"
+      },
+      "cooling_group_5_curve_selected": {
+        "name": "Cooling group 5 curve selected"
+      },
+      "simultaneous_heating_and_cooling_consumption_configured": {
+        "name": "Simultaneous heating and cooling consumption configured"
+      },
+      "cooling_user_enabled": {
+        "name": "Cooling user enabled"
+      },
+      "dhw_recirculation_user_enabled": {
+        "name": "DHW recirculation user enabled"
+      },
+      "dhw_auxiliary_2_emergency_enabled": {
+        "name": "DHW auxiliary 2 emergency enabled"
+      },
+      "pool_auxiliary_2_emergency_enabled": {
+        "name": "Pool auxiliary 2 emergency enabled"
+      },
+      "heating_auxiliary_2_emergency_enabled": {
+        "name": "Heating auxiliary 2 emergency enabled"
+      },
+      "dhw_auxiliary_2_support_enabled": {
+        "name": "DHW auxiliary 2 support enabled"
+      },
+      "pool_auxiliary_2_support_enabled": {
+        "name": "Pool auxiliary 2 support enabled"
+      },
+      "heating_auxiliary_2_support_enabled": {
+        "name": "Heating auxiliary 2 support enabled"
+      },
+      "night_mode_enabled": {
+        "name": "Night mode enabled"
+      },
+      "legionella_programme_enabled": {
+        "name": "Legionella programme enabled"
+      },
+      "legionella_monday_enabled": {
+        "name": "Legionella Monday enabled"
+      },
+      "legionella_tuesday_enabled": {
+        "name": "Legionella Tuesday enabled"
+      },
+      "legionella_wednesday_enabled": {
+        "name": "Legionella Wednesday enabled"
+      },
+      "legionella_thursday_enabled": {
+        "name": "Legionella Thursday enabled"
+      },
+      "legionella_friday_enabled": {
+        "name": "Legionella Friday enabled"
+      },
+      "legionella_saturday_enabled": {
+        "name": "Legionella Saturday enabled"
+      },
+      "legionella_sunday_enabled": {
+        "name": "Legionella Sunday enabled"
+      },
+      "current_summer_season": {
+        "name": "Current summer season"
+      },
+      "automatic_clock_change_enabled": {
+        "name": "Automatic clock change enabled"
+      },
+      "dhw_user_enabled": {
+        "name": "DHW user enabled"
+      },
+      "dhw_auxiliary_1_emergency_enabled": {
+        "name": "DHW auxiliary 1 emergency enabled"
+      },
+      "dhw_auxiliary_1_support_enabled": {
+        "name": "DHW auxiliary 1 support enabled"
+      },
+      "heating_auxiliary_1_emergency_enabled": {
+        "name": "Heating auxiliary 1 emergency enabled"
+      },
+      "heating_auxiliary_1_support_enabled": {
+        "name": "Heating auxiliary 1 support enabled"
+      },
+      "passive_cooling_production_pump_configured": {
+        "name": "Passive cooling production pump configured"
+      },
+      "passive_cooling_brine_pump_configured": {
+        "name": "Passive cooling brine pump configured"
+      },
+      "dhw_recirculation_event_1_state": {
+        "name": "DHW recirculation event 1 state"
+      },
+      "dhw_recirculation_event_2_state": {
+        "name": "DHW recirculation event 2 state"
+      },
+      "dhw_recirculation_event_3_state": {
+        "name": "DHW recirculation event 3 state"
+      },
+      "dhw_recirculation_event_4_state": {
+        "name": "DHW recirculation event 4 state"
+      },
+      "anti_frost_enabled": {
+        "name": "Anti frost enabled"
+      },
+      "e_manager_grid_meter_configured": {
+        "name": "E-manager grid meter configured"
+      },
+      "e_manager_surplus_control_enabled": {
+        "name": "E-manager surplus control enabled"
+      },
+      "e_manager_consumption_limit_enabled": {
+        "name": "E-manager consumption limit enabled"
+      },
+      "e_manager_surplus_control_status": {
+        "name": "E-manager surplus control status"
+      },
+      "e_manager_consumption_limit_status": {
+        "name": "E-manager consumption limit status"
+      },
+      "floor_drying_phase_1_duration_hours": {
+        "name": "Floor drying phase 1 duration hours"
+      },
+      "floor_drying_phase_2_duration_hours": {
+        "name": "Floor drying phase 2 duration hours"
+      },
+      "floor_drying_phase_3_duration_hours": {
+        "name": "Floor drying phase 3 duration hours"
+      },
+      "floor_drying_phase_4_duration_hours": {
+        "name": "Floor drying phase 4 duration hours"
+      },
+      "floor_drying_phase_5_duration_hours": {
+        "name": "Floor drying phase 5 duration hours"
+      },
+      "floor_drying_phase_6_duration_hours": {
+        "name": "Floor drying phase 6 duration hours"
+      },
+      "web_operating_state": {
+        "name": "Web operating state"
+      },
+      "user_panel_operating_selection": {
+        "name": "User panel operating selection"
+      },
+      "season_programme_code": {
+        "name": "Season programme code"
+      },
+      "automatic_season_change_delay_hours": {
+        "name": "Automatic season change delay hours"
+      },
+      "night_start_hour": {
+        "name": "Night start hour"
+      },
+      "night_start_minute": {
+        "name": "Night start minute"
+      },
+      "night_end_hour": {
+        "name": "Night end hour"
+      },
+      "night_end_minute": {
+        "name": "Night end minute"
+      },
+      "night_compressor_capacity_limit": {
+        "name": "Night compressor capacity limit"
+      },
+      "legionella_start_hour": {
+        "name": "Legionella start hour"
+      },
+      "legionella_start_minute": {
+        "name": "Legionella start minute"
+      },
+      "cooling_group_1_user_adjustment": {
+        "name": "Cooling group 1 user adjustment"
+      },
+      "cooling_group_2_user_adjustment": {
+        "name": "Cooling group 2 user adjustment"
+      },
+      "cooling_group_3_user_adjustment": {
+        "name": "Cooling group 3 user adjustment"
+      },
+      "cooling_group_4_user_adjustment": {
+        "name": "Cooling group 4 user adjustment"
+      },
+      "cooling_group_5_user_adjustment": {
+        "name": "Cooling group 5 user adjustment"
+      },
+      "floor_drying_phase": {
+        "name": "Floor drying phase"
+      },
+      "floor_drying_phase_elapsed_hours": {
+        "name": "Floor drying phase elapsed hours"
+      },
+      "automatic_clock_change_offset_minutes": {
+        "name": "Automatic clock change offset minutes"
+      },
+      "automatic_clock_change_start_week": {
+        "name": "Automatic clock change start week"
+      },
+      "automatic_clock_change_start_weekday": {
+        "name": "Automatic clock change start weekday"
+      },
+      "automatic_clock_change_start_month": {
+        "name": "Automatic clock change start month"
+      },
+      "automatic_clock_change_start_hour": {
+        "name": "Automatic clock change start hour"
+      },
+      "automatic_clock_change_end_week": {
+        "name": "Automatic clock change end week"
+      },
+      "automatic_clock_change_end_weekday": {
+        "name": "Automatic clock change end weekday"
+      },
+      "automatic_clock_change_end_month": {
+        "name": "Automatic clock change end month"
+      },
+      "automatic_clock_change_end_hour": {
+        "name": "Automatic clock change end hour"
+      },
+      "dhw_recirculation_event_1_hour": {
+        "name": "DHW recirculation event 1 hour"
+      },
+      "dhw_recirculation_event_1_minute": {
+        "name": "DHW recirculation event 1 minute"
+      },
+      "dhw_recirculation_event_2_hour": {
+        "name": "DHW recirculation event 2 hour"
+      },
+      "dhw_recirculation_event_2_minute": {
+        "name": "DHW recirculation event 2 minute"
+      },
+      "dhw_recirculation_event_3_hour": {
+        "name": "DHW recirculation event 3 hour"
+      },
+      "dhw_recirculation_event_3_minute": {
+        "name": "DHW recirculation event 3 minute"
+      },
+      "dhw_recirculation_event_4_hour": {
+        "name": "DHW recirculation event 4 hour"
+      },
+      "dhw_recirculation_event_4_minute": {
+        "name": "DHW recirculation event 4 minute"
+      },
+      "e_manager_grid_meter_address": {
+        "name": "E-manager grid meter address"
       }
     },
     "number": {

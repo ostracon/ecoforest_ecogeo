@@ -48,7 +48,7 @@ class ApiTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(self.requests,[])
     async def test_complete_read_and_instance_specific_mapping(self):
         data=await self.api.get()
-        self.assertEqual(data.model_name,'EATM00'); self.assertEqual(len(data.state),360)
+        self.assertEqual(data.model_name,'EATM00'); self.assertEqual(len(data.state),475)
         self.assertEqual(data.state['heating_buffer_dt_start'],4)
         self.assertEqual(data.failed_reads,[])
         self.assertTrue(all(q['idOperacion'] in [2001,2002] for q in self.requests))
