@@ -34,7 +34,7 @@ class ApiTests(unittest.IsolatedAsyncioTestCase):
         op,a,n=data['idOperacion'],data['dir'],data['num']
         if a==5323:
             symbols=['--']+list(string.digits+string.ascii_uppercase)
-            vals=[f'{symbols.index(c):04X}' for c in 'EATM00']
+            vals=[f'{symbols.index(c):04X}' for c in 'EATM00'] + ['0000'] * (n - 6)
         else:
             vals=['0' if op==2001 else '0000' for _ in range(n)]
             if a<=117<a+n and op==2002: vals[117-a]='0028'
@@ -48,7 +48,7 @@ class ApiTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(self.requests,[])
     async def test_complete_read_and_instance_specific_mapping(self):
         data=await self.api.get()
-        self.assertEqual(data.model_name,'EATM00'); self.assertEqual(len(data.state),475)
+        self.assertEqual(data.model_name,'EATM00'); self.assertEqual(len(data.state),570)
         self.assertEqual(data.state['heating_buffer_dt_start'],4)
         self.assertEqual(data.failed_reads,[])
         self.assertTrue(all(q['idOperacion'] in [2001,2002] for q in self.requests))
@@ -61,7 +61,7 @@ class ApiTests(unittest.IsolatedAsyncioTestCase):
                          if q['optional'] and q['address']<=117<q['address']+q['length'])
         data=await self.api.get()
         self.assertIsNone(data.state['heating_buffer_dt_start'])
-        self.assertTrue(data.failed_reads)
+        self.assertEqual(data.failed_reads,[(1,117,1)])
         self.assertIsNotNone(data.state['heat_buffer_tank_setpoint'])
     async def test_required_failure_raises_after_three_attempts(self):
         await self.api.get(); self.requests=[]

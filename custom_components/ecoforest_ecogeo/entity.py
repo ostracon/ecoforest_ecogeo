@@ -87,6 +87,7 @@ class EcoforestEntity(CoordinatorEntity[EcoforestCoordinator]):
                     if "class" in SENSOR_TYPES[definition["entity_type"]].keys()
                     else None
                 ),
+                entity_registry_enabled_default=not definition.get("disabled_by_default", False),
                 state_class=(
                     SENSOR_TYPES[definition["entity_type"]]["state_class"]
                     if "state_class" in SENSOR_TYPES[definition["entity_type"]].keys()

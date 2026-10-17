@@ -1852,6 +1852,291 @@
       },
       "e_manager_grid_meter_address": {
         "name": "E-manager grid meter address"
+      },
+      "dg1_fixed_cooling_supply_temperature": {
+        "name": "DG1 fixed cooling supply temperature"
+      },
+      "sg2_fixed_cooling_supply_temperature": {
+        "name": "SG2 fixed cooling supply temperature"
+      },
+      "sg3_fixed_cooling_supply_temperature": {
+        "name": "SG3 fixed cooling supply temperature"
+      },
+      "sg4_fixed_cooling_supply_temperature": {
+        "name": "SG4 fixed cooling supply temperature"
+      },
+      "sg5_fixed_cooling_supply_temperature": {
+        "name": "SG5 fixed cooling supply temperature"
+      },
+      "dg1_cooling_curve_supply_endpoint_1": {
+        "name": "DG1 cooling curve supply endpoint 1"
+      },
+      "sg2_cooling_curve_supply_endpoint_1": {
+        "name": "SG2 cooling curve supply endpoint 1"
+      },
+      "sg3_cooling_curve_supply_endpoint_1": {
+        "name": "SG3 cooling curve supply endpoint 1"
+      },
+      "sg4_cooling_curve_supply_endpoint_1": {
+        "name": "SG4 cooling curve supply endpoint 1"
+      },
+      "sg5_cooling_curve_supply_endpoint_1": {
+        "name": "SG5 cooling curve supply endpoint 1"
+      },
+      "dg1_cooling_curve_supply_endpoint_2": {
+        "name": "DG1 cooling curve supply endpoint 2"
+      },
+      "sg2_cooling_curve_supply_endpoint_2": {
+        "name": "SG2 cooling curve supply endpoint 2"
+      },
+      "sg3_cooling_curve_supply_endpoint_2": {
+        "name": "SG3 cooling curve supply endpoint 2"
+      },
+      "sg4_cooling_curve_supply_endpoint_2": {
+        "name": "SG4 cooling curve supply endpoint 2"
+      },
+      "sg5_cooling_curve_supply_endpoint_2": {
+        "name": "SG5 cooling curve supply endpoint 2"
+      },
+      "dg1_cooling_curve_outdoor_endpoint_1": {
+        "name": "DG1 cooling curve outdoor endpoint 1"
+      },
+      "sg2_cooling_curve_outdoor_endpoint_1": {
+        "name": "SG2 cooling curve outdoor endpoint 1"
+      },
+      "sg3_cooling_curve_outdoor_endpoint_1": {
+        "name": "SG3 cooling curve outdoor endpoint 1"
+      },
+      "sg4_cooling_curve_outdoor_endpoint_1": {
+        "name": "SG4 cooling curve outdoor endpoint 1"
+      },
+      "sg5_cooling_curve_outdoor_endpoint_1": {
+        "name": "SG5 cooling curve outdoor endpoint 1"
+      },
+      "dg1_cooling_curve_outdoor_endpoint_2": {
+        "name": "DG1 cooling curve outdoor endpoint 2"
+      },
+      "sg2_cooling_curve_outdoor_endpoint_2": {
+        "name": "SG2 cooling curve outdoor endpoint 2"
+      },
+      "sg3_cooling_curve_outdoor_endpoint_2": {
+        "name": "SG3 cooling curve outdoor endpoint 2"
+      },
+      "sg4_cooling_curve_outdoor_endpoint_2": {
+        "name": "SG4 cooling curve outdoor endpoint 2"
+      },
+      "sg5_cooling_curve_outdoor_endpoint_2": {
+        "name": "SG5 cooling curve outdoor endpoint 2"
+      },
+      "bivalent_parallel_outdoor_threshold": {
+        "name": "Bivalent parallel outdoor threshold"
+      },
+      "floor_drying_phase_1_setpoint": {
+        "name": "Floor drying phase 1 setpoint"
+      },
+      "floor_drying_phase_2_setpoint": {
+        "name": "Floor drying phase 2 setpoint"
+      },
+      "floor_drying_phase_3_setpoint": {
+        "name": "Floor drying phase 3 setpoint"
+      },
+      "floor_drying_phase_4_setpoint": {
+        "name": "Floor drying phase 4 setpoint"
+      },
+      "floor_drying_phase_5_setpoint": {
+        "name": "Floor drying phase 5 setpoint"
+      },
+      "floor_drying_phase_6_setpoint": {
+        "name": "Floor drying phase 6 setpoint"
+      },
+      "bivalent_support_dt_start": {
+        "name": "Bivalent support DT start"
+      },
+      "bivalent_replacement_outdoor_threshold": {
+        "name": "Bivalent replacement outdoor threshold"
+      },
+      "dg1_bus_room_terminal_dt": {
+        "name": "DG1 BUS room-terminal DT"
+      },
+      "sg2_bus_room_terminal_dt": {
+        "name": "SG2 BUS room-terminal DT"
+      },
+      "sg3_bus_room_terminal_dt": {
+        "name": "SG3 BUS room-terminal DT"
+      },
+      "sg4_bus_room_terminal_dt": {
+        "name": "SG4 BUS room-terminal DT"
+      },
+      "sg5_bus_room_terminal_dt": {
+        "name": "SG5 BUS room-terminal DT"
+      },
+      "source_dt": {
+        "name": "Source DT"
+      },
+      "e_manager_activation_threshold": {
+        "name": "E-manager activation threshold"
+      },
+      "e_manager_deactivation_threshold": {
+        "name": "E-manager deactivation threshold"
+      },
+      "dg1_heating_emission_system": {
+        "name": "DG1 heating emission system"
+      },
+      "sg2_heating_emission_system": {
+        "name": "SG2 heating emission system"
+      },
+      "sg3_heating_emission_system": {
+        "name": "SG3 heating emission system"
+      },
+      "sg4_heating_emission_system": {
+        "name": "SG4 heating emission system"
+      },
+      "sg5_heating_emission_system": {
+        "name": "SG5 heating emission system"
+      },
+      "building_insulation_selection_raw": {
+        "name": "Building insulation selection raw"
+      },
+      "cooling_connection_type_raw": {
+        "name": "Cooling connection type raw"
+      },
+      "dg1_cooling_emission_system": {
+        "name": "DG1 cooling emission system"
+      },
+      "sg2_cooling_emission_system": {
+        "name": "SG2 cooling emission system"
+      },
+      "sg3_cooling_emission_system": {
+        "name": "SG3 cooling emission system"
+      },
+      "sg4_cooling_emission_system": {
+        "name": "SG4 cooling emission system"
+      },
+      "sg5_cooling_emission_system": {
+        "name": "SG5 cooling emission system"
+      },
+      "bivalent_support_activation_delay": {
+        "name": "Bivalent support activation delay"
+      },
+      "smart_grid_valley_dhw_temperature_adjustment": {
+        "name": "Smart Grid valley DHW temperature adjustment"
+      },
+      "smart_grid_valley_heating_temperature_adjustment": {
+        "name": "Smart Grid valley heating temperature adjustment"
+      },
+      "smart_grid_valley_cooling_temperature_adjustment": {
+        "name": "Smart Grid valley cooling temperature adjustment"
+      },
+      "smart_grid_valley_pool_temperature_adjustment": {
+        "name": "Smart Grid valley pool temperature adjustment"
+      },
+      "web_interface_language_code_raw": {
+        "name": "Web interface language code raw"
+      },
+      "model_code_character_1": {
+        "name": "Model code character 1"
+      },
+      "model_code_character_2": {
+        "name": "Model code character 2"
+      },
+      "model_code_character_3": {
+        "name": "Model code character 3"
+      },
+      "model_code_character_4": {
+        "name": "Model code character 4"
+      },
+      "model_code_character_5": {
+        "name": "Model code character 5"
+      },
+      "model_code_character_6": {
+        "name": "Model code character 6"
+      },
+      "dg1_heating_thermostat_logic": {
+        "name": "DG1 heating thermostat logic"
+      },
+      "dg1_cooling_thermostat_logic": {
+        "name": "DG1 cooling thermostat logic"
+      },
+      "sg2_heating_thermostat_logic": {
+        "name": "SG2 heating thermostat logic"
+      },
+      "sg2_cooling_thermostat_logic": {
+        "name": "SG2 cooling thermostat logic"
+      },
+      "sg3_heating_thermostat_logic": {
+        "name": "SG3 heating thermostat logic"
+      },
+      "sg3_cooling_thermostat_logic": {
+        "name": "SG3 cooling thermostat logic"
+      },
+      "sg4_heating_thermostat_logic": {
+        "name": "SG4 heating thermostat logic"
+      },
+      "sg4_cooling_thermostat_logic": {
+        "name": "SG4 cooling thermostat logic"
+      },
+      "sg5_heating_thermostat_logic": {
+        "name": "SG5 heating thermostat logic"
+      },
+      "sg5_cooling_thermostat_logic": {
+        "name": "SG5 cooling thermostat logic"
+      },
+      "floor_drying_programme_enabled": {
+        "name": "Floor drying programme enabled"
+      },
+      "bus_room_terminal_dt_control_enabled": {
+        "name": "BUS room-terminal DT control enabled"
+      },
+      "evu_control_enabled": {
+        "name": "EVU control enabled"
+      },
+      "evu_di1_logic": {
+        "name": "EVU DI1 logic"
+      },
+      "winter_summer_remote_control_enabled": {
+        "name": "Winter/summer remote control enabled"
+      },
+      "winter_summer_di2_logic": {
+        "name": "Winter/summer DI2 logic"
+      },
+      "dhw_remote_control_enabled": {
+        "name": "DHW remote control enabled"
+      },
+      "dhw_di3_logic": {
+        "name": "DHW DI3 logic"
+      },
+      "pool_remote_control_enabled": {
+        "name": "Pool remote control enabled"
+      },
+      "pool_di4_logic": {
+        "name": "Pool DI4 logic"
+      },
+      "smart_grid_signal_1_logic_eatm00": {
+        "name": "Smart Grid signal 1 logic (EATM00)"
+      },
+      "smart_grid_signal_2_logic_eatm00": {
+        "name": "Smart Grid signal 2 logic (EATM00)"
+      },
+      "boiler_production_pump_configured": {
+        "name": "Boiler production pump configured"
+      },
+      "sg2_three_way_valve_direction": {
+        "name": "SG2 three-way valve direction"
+      },
+      "sg3_three_way_valve_direction": {
+        "name": "SG3 three-way valve direction"
+      },
+      "sg4_three_way_valve_direction": {
+        "name": "SG4 three-way valve direction"
+      },
+      "sg5_three_way_valve_direction": {
+        "name": "SG5 three-way valve direction"
+      },
+      "smart_grid_control_enabled": {
+        "name": "Smart Grid control enabled"
+      },
+      "e_manager_grid_meter_connection_type": {
+        "name": "E-manager grid meter connection type"
       }
     },
     "number": {

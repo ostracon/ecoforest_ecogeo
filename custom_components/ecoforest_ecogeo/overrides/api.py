@@ -10,7 +10,8 @@ import httpx
 from pyecoforest.api import EcoforestApi
 from pyecoforest.exceptions import EcoforestAuthenticationRequired, EcoforestConnectionError
 from datetime import datetime, timezone
-from ..registers import hp_mapping, read_requests, decode, validate_read, parse_read, signed_integer
+from ..registers import (hp_mapping, read_requests, split_optional_request, decode,
+                         validate_read, parse_read, signed_integer)
 
 from custom_components.ecoforest_ecogeo.overrides.device import EcoGeoDevice
 
@@ -199,7 +200,10 @@ class EcoGeoApi(EcoforestApi):
                         for dt, rows in _DOMESTIC_REQUESTS.items() for r in rows]
         state = {1: {}, 2: {}}
         errors = []
-        for request in requests:
+        request_index = 0
+        while request_index < len(requests):
+            request = requests[request_index]
+            request_index += 1
             attempts = 1 if request['optional'] else 3
             for attempt in range(attempts):
                 try:
@@ -212,7 +216,11 @@ class EcoGeoApi(EcoforestApi):
                     if attempt + 1 < attempts:
                         await asyncio.sleep(2 ** attempt)
                     elif request['optional']:
-                        errors.append((request['data_type'], request['address'], request['length']))
+                        smaller = split_optional_request(request)
+                        if smaller:
+                            requests[request_index:request_index] = smaller
+                        else:
+                            errors.append((request['data_type'], request['address'], request['length']))
                     else:
                         raise
             # Keep requests sequential and avoid hammering the controller.
