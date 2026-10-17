@@ -20,6 +20,7 @@ from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity import EntityDescription, generate_entity_id
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.helpers.typing import StateType
+from homeassistant.util import slugify
 
 from .const import DOMAIN, MANUFACTURER
 from .coordinator import EcoforestCoordinator
@@ -104,7 +105,7 @@ class EcoforestEntity(CoordinatorEntity[EcoforestCoordinator]):
 
         id = f"{device_id}_{key}"
         self._attr_unique_id = id
-        self.entity_id = f"sensor.{id}"
+        self.entity_id = f"sensor.{slugify(id)}"
 
         super().__init__(coordinator)
 
