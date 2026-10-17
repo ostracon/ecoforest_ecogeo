@@ -25,15 +25,17 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         device = await api.get()
         _LOGGER.debug("Ecoforest: %s", device)
     except EcoforestAuthenticationRequired:
+        await api.async_close()
         _LOGGER.error("Authentication on device")
         return False
     except EcoforestConnectionError as err:
+        await api.async_close()
         _LOGGER.error("Error communicating with device")
         raise ConfigEntryNotReady from err
 
     coordinator = EcoforestCoordinator(hass, api)
 
-    await coordinator.async_config_entry_first_refresh()
+    coordinator.async_set_updated_data(device)
 
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = coordinator
 
@@ -45,6 +47,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a config entry."""
     if unload_ok := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
-        hass.data[DOMAIN].pop(entry.entry_id)
+        coordinator = hass.data[DOMAIN].pop(entry.entry_id)
+        await coordinator.api.async_close()
 
     return unload_ok

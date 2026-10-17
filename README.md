@@ -1,13 +1,15 @@
 [![SWUbanner](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner-direct-single.svg)](https://stand-with-ukraine.pp.ua/)
 
-Ecoforest EcoGeo heat pump integration PoC (proof of concept, thus may lack features or stability)
+Read-only Ecoforest EcoGeo heat pump integration PoC (proof of concept, thus may lack features or stability)
+
+See [register coverage and safety](READ_ONLY_REGISTERS.md) for the HP map, diagnostic limitations and offline tests.
 
 To install this integration, add this GitHub Repo to the HACS Custom Repositories or use the button below
 
-[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=bytestorm&repository=ecoforest_ecogeo&category=integration)
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=ostracon&repository=ecoforest_ecogeo&category=integration)
 
 After installing the integration in HACS
-- Restart Home Assistant 
+- Restart Home Assistant
 - Go to "Settings" -> "Devices & Services" -> "Add integration"
 - Look for "Ecoforest Ecogeo" integration to start setting it up
 - For "Ecoforest Easynet URL" use the web interface address of your heat pump (e.g. http://192.168.1.200/)
@@ -24,7 +26,7 @@ Custom visualization:
 
 <details>
   <summary>Details...</summary>
-  
+
   This card is built using [power-flow-card-plus](https://github.com/flixlix/power-flow-card-plus). You can install it with HACS.<br />
   Just replace entity prefixes (ebfhbb in my case) with the model name or the alias of your heat pump.
 

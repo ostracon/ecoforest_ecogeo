@@ -8,6 +8,9 @@ from typing import Any
 
 import httpx
 from pyecoforest.api import EcoforestApi
+from pyecoforest.exceptions import EcoforestAuthenticationRequired, EcoforestConnectionError
+from datetime import datetime, timezone
+from ..registers import hp_mapping, read_requests, decode, validate_read, parse_read, signed_integer
 
 from custom_components.ecoforest_ecogeo.overrides.device import EcoGeoDevice
 
@@ -134,7 +137,7 @@ with open(
 ) as f:
     _info = json.load(f)
 _DOMESTIC_MAPPING = _build_mapping(_info["ecoGEO_domestic"])
-_HP_MAPPING = _build_mapping(_info["ecoGEO_HP"])
+_HP_MAPPING = hp_mapping()
 _DOMESTIC_REQUESTS = _build_requests(_DOMESTIC_MAPPING)
 _HP_REQUESTS = _build_requests(_HP_MAPPING)
 
@@ -148,122 +151,100 @@ HP_MODELS = {"EATM00"}
 
 
 class EcoGeoApi(EcoforestApi):
+    """Sensor-only client. Every inherited method is gated at the transport boundary."""
     def __init__(self, host: str, user: str, password: str) -> None:
         super().__init__(host, httpx.BasicAuth(user, password))
-        self._MAPPING = MAPPING
-        self._REQUESTS = _DOMESTIC_REQUESTS
-        self._model_name: str | None = None
+        self.mapping = _DOMESTIC_MAPPING
+        self._model_name = None
+        self._lock = asyncio.Lock()
+
+    async def _request(self, data=None):
+        validate_read(data)
+        try:
+            response = await self._client.post(
+                '/recepcion_datos_4.cgi', auth=self._auth,
+                timeout=self._timeout, data=data,
+            )
+            response.raise_for_status()
+            return parse_read(response.text, data)
+        except httpx.HTTPStatusError as err:
+            if err.response.status_code in (401, 403):
+                raise EcoforestAuthenticationRequired(err.response.status_code) from err
+            raise EcoforestConnectionError('Ecoforest HTTP read failed') from err
+        except (httpx.RequestError, ValueError) as err:
+            raise EcoforestConnectionError('Invalid or failed Ecoforest read') from err
+
+    async def _load_data(self, address, length, op_type):
+        values = await self._request({'idOperacion': op_type, 'dir': address, 'num': length})
+        return dict(zip(range(address, address + length), values))
 
     async def get(self) -> EcoGeoDevice:
-        state = {DataTypes.Coil: {}, DataTypes.Register: {}}
+        async with self._lock:
+            return await self._get()
 
+    async def _get(self):
         if self._model_name is None:
-            model_data = await self._load_data(
-                MODEL_ADDRESS, MODEL_LENGTH, Operations.Get[DataTypes.Register]
-            )
-            print(f"model_data: {model_data}")
-            model_dictionary = ["--"] + [*string.digits] + [*string.ascii_uppercase]
-            self._model_name = "".join(
-                [
-                    model_dictionary[self.parse_ecoforest_int(x)]
-                    for x in model_data.values()
-                ]
-            )
-            print(f"model_name: {self._model_name}")
-
-            if self._model_name in HP_MODELS:
-                print("HP MODELS")
-                self._MAPPING = _HP_MAPPING
-                self._REQUESTS = _HP_REQUESTS
+            data = await self._load_data(MODEL_ADDRESS, MODEL_LENGTH, 2002)
+            symbols = ['--'] + list(string.digits + string.ascii_uppercase)
+            codes = [signed_integer(data[a]) for a in range(MODEL_ADDRESS, MODEL_ADDRESS + MODEL_LENGTH)]
+            if any(n < 0 or n >= len(symbols) for n in codes):
+                raise EcoforestConnectionError('Invalid Ecoforest model code')
+            self._model_name = ''.join(symbols[n] for n in codes)
+            self.mapping = _HP_MAPPING if self._model_name in HP_MODELS else _DOMESTIC_MAPPING
+        is_hp = self._model_name in HP_MODELS
+        if is_hp:
+            requests = read_requests(self.mapping)
+        else:
+            requests = [dict(r, data_type=dt, optional=False)
+                        for dt, rows in _DOMESTIC_REQUESTS.items() for r in rows]
+        state = {1: {}, 2: {}}
+        errors = []
+        for request in requests:
+            attempts = 1 if request['optional'] else 3
+            for attempt in range(attempts):
+                try:
+                    state[request['data_type']].update(await self._load_data(
+                        request['address'], request['length'], Operations.Get[request['data_type']]))
+                    break
+                except EcoforestAuthenticationRequired:
+                    raise
+                except EcoforestConnectionError:
+                    if attempt + 1 < attempts:
+                        await asyncio.sleep(2 ** attempt)
+                    elif request['optional']:
+                        errors.append((request['data_type'], request['address'], request['length']))
+                    else:
+                        raise
+            # Keep requests sequential and avoid hammering the controller.
+            await asyncio.sleep(0.05)
+        values = {}
+        raw_values = {}
+        for key, definition in self.mapping.items():
+            raw = state[definition['data_type']].get(definition['address'])
+            raw_values[key] = raw
+            if is_hp:
+                values[key] = decode(raw, definition)
+            elif raw is None:
+                values[key] = None
             else:
-                print("DOMESTIC MODELS")
-                self._MAPPING = _DOMESTIC_MAPPING
-                self._REQUESTS = _DOMESTIC_REQUESTS
-            global MAPPING
-            MAPPING = self._MAPPING
+                parser = {'int': self.parse_ecoforest_int, 'float': self.parse_ecoforest_float,
+                          'boolean': self.parse_ecoforest_bool}[definition['type']]
+                value = parser(raw)
+                values[key] = None if definition['entity_type'] == 'temperature' and value == -999.9 else value
+        return EcoGeoDevice.build(self._model_name, values, raw_values=raw_values,
+                                  failed_reads=errors, observed_at=datetime.now(timezone.utc).isoformat())
 
-        for dt in [DataTypes.Coil, DataTypes.Register]:
-            for request in self._REQUESTS[dt]:
-                print(f"Getting: addr:{request['address']} len:{request['length']}")
-                # Retry with backoff
-                for i in range(3):
-                    try:
-                        state[dt].update(
-                            await self._load_data(
-                                request["address"],
-                                request["length"],
-                                Operations.Get[dt],
-                            )
-                        )
-                        break
-                    except Exception as e:
-                        print(f"Error: {e}, sleeping for {2 ** i} seconds")
-                        # i = 4 here to ensure we sleep for a good amount of time if something went wrong or the HP is busy
-                        if i < 4:
-                            await asyncio.sleep(2**i)
-                        else:
-                            raise
+    async def async_close(self):
+        await self._client.aclose()
 
-        device_info: dict[str, Any] = {}
-        for name, definition in self._MAPPING.items():
-            try:
-                raw = state[definition["data_type"]][definition["address"]]
-            except KeyError:
-                continue
-            match definition["type"]:
-                case "int":
-                    value = self.parse_ecoforest_int(raw)
-                case "float":
-                    value = self.parse_ecoforest_float(raw)
-                case "boolean":
-                    value = self.parse_ecoforest_bool(raw)
-                case _:
-                    continue
-            if definition["entity_type"] == "temperature" and value == -999.9:
-                value = None
-            device_info[name] = value
+    @staticmethod
+    def parse_ecoforest_int(value):
+        return signed_integer(value)
 
-        _LOGGER.debug(device_info)
-        return EcoGeoDevice.build(self._model_name, device_info)
-
-    async def _load_data(self, address, length, op_type) -> dict[int, str]:
-        response = await self._request(
-            data={"idOperacion": op_type, "dir": address, "num": length}
-        )
-
-        result = {}
-        index = 0
-        for i in range(address, address + length):
-            result[i] = response[index]
-            index += 1
-
-        return result
-
-    def _parse(self, response: str) -> list[str]:
-        # Override default parse to get the proper data out
-        lines = response.split("\n")
-
-        a, b = lines[0].split("=")
-        if (
-            a
-            not in [
-                "error_geo_get_reg",
-                "error_geo_get_bit",
-                "error_geo_set_reg",
-                "error_geo_set_bit",
-            ]
-            or b != "0"
-        ):
-            raise Exception("bad response: {}".format(response))
-
-        return lines[1].split("&")[2:]
-
-    def parse_ecoforest_int(self, value):
-        result = int(value, 16)
-        return result if result <= 32768 else result - 65536
-
-    def parse_ecoforest_bool(self, value):
+    @staticmethod
+    def parse_ecoforest_bool(value):
         return bool(int(value))
 
-    def parse_ecoforest_float(self, value):
-        return self.parse_ecoforest_int(value) / 10
+    @staticmethod
+    def parse_ecoforest_float(value):
+        return signed_integer(value) / 10

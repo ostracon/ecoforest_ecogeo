@@ -33,7 +33,7 @@ async def async_setup_entry(
     coordinator: EcoforestCoordinator = hass.data[DOMAIN][config_entry.entry_id]
 
     device_alias = config_entry.data[CONF_ALIAS] if CONF_ALIAS in config_entry.data else None
-    mapping = api_module.MAPPING
+    mapping = coordinator.api.mapping
     entities = [
         EcoforestSensor(coordinator, key, definition, device_alias)
         for key, definition in mapping.items()
@@ -53,4 +53,21 @@ class EcoforestSensor(SensorEntity, EcoforestEntity):
         if self.entity_description.value_fn is not None:
             return self.entity_description.value_fn(self.data)
 
-        return self.data.state[self.entity_description.key]
+        return self.data.state.get(self.entity_description.key)
+
+    @property
+    def available(self):
+        return super().available and self.data.state.get(self.entity_description.key) is not None
+
+    @property
+    def extra_state_attributes(self):
+        definition = self.coordinator.api.mapping[self.entity_description.key]
+        attributes = {'register_address': definition['address'],
+                      'register_bank': definition.get('bank', definition['data_type']),
+                      'read_only': True}
+        for field in ('source', 'note'):
+            if field in definition:
+                attributes[field] = definition[field]
+        if self.data.raw_values is not None:
+            attributes['raw_value'] = self.data.raw_values.get(self.entity_description.key)
+        return attributes

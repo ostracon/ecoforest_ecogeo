@@ -1084,6 +1084,429 @@
       },
       "working_programme_by_bus": {
         "name": "Working programme by BUS"
+      },
+      "dhw_configured_temperature": {
+        "name": "DHW configured temperature"
+      },
+      "dhw_dt_start": {
+        "name": "DHW DT start"
+      },
+      "dhw_recirculation_temperature": {
+        "name": "DHW recirculation temperature"
+      },
+      "dhw_recirculation_dt_start": {
+        "name": "DHW recirculation DT start"
+      },
+      "outdoor_heating_cutoff": {
+        "name": "Outdoor heating cutoff"
+      },
+      "dg1_fixed_heating_temperature": {
+        "name": "DG1 fixed heating temperature"
+      },
+      "sg2_fixed_heating_temperature": {
+        "name": "SG2 fixed heating temperature"
+      },
+      "sg3_fixed_heating_temperature": {
+        "name": "SG3 fixed heating temperature"
+      },
+      "sg4_fixed_heating_temperature": {
+        "name": "SG4 fixed heating temperature"
+      },
+      "sg5_fixed_heating_temperature": {
+        "name": "SG5 fixed heating temperature"
+      },
+      "dg1_heating_curve_supply_endpoint": {
+        "name": "DG1 heating curve supply endpoint"
+      },
+      "sg2_heating_curve_supply_endpoint": {
+        "name": "SG2 heating curve supply endpoint"
+      },
+      "sg3_heating_curve_supply_endpoint": {
+        "name": "SG3 heating curve supply endpoint"
+      },
+      "sg4_heating_curve_supply_endpoint": {
+        "name": "SG4 heating curve supply endpoint"
+      },
+      "sg5_heating_curve_supply_endpoint": {
+        "name": "SG5 heating curve supply endpoint"
+      },
+      "dg1_heating_curve_outdoor_endpoint": {
+        "name": "DG1 heating curve outdoor endpoint"
+      },
+      "sg2_heating_curve_outdoor_endpoint": {
+        "name": "SG2 heating curve outdoor endpoint"
+      },
+      "sg3_heating_curve_outdoor_endpoint": {
+        "name": "SG3 heating curve outdoor endpoint"
+      },
+      "sg4_heating_curve_outdoor_endpoint": {
+        "name": "SG4 heating curve outdoor endpoint"
+      },
+      "sg5_heating_curve_outdoor_endpoint": {
+        "name": "SG5 heating curve outdoor endpoint"
+      },
+      "dg1_heating_curve_shared_endpoint": {
+        "name": "DG1 heating curve shared endpoint"
+      },
+      "sg2_heating_curve_shared_endpoint": {
+        "name": "SG2 heating curve shared endpoint"
+      },
+      "sg3_heating_curve_shared_endpoint": {
+        "name": "SG3 heating curve shared endpoint"
+      },
+      "sg4_heating_curve_shared_endpoint": {
+        "name": "SG4 heating curve shared endpoint"
+      },
+      "sg5_heating_curve_shared_endpoint": {
+        "name": "SG5 heating curve shared endpoint"
+      },
+      "heating_dt_supply": {
+        "name": "Heating DT supply"
+      },
+      "outdoor_passive_cooling_cutoff": {
+        "name": "Outdoor passive cooling cutoff"
+      },
+      "outdoor_active_cooling_cutoff": {
+        "name": "Outdoor active cooling cutoff"
+      },
+      "pool_installer_offset": {
+        "name": "Pool installer offset"
+      },
+      "heating_buffer_dt_start": {
+        "name": "Heating buffer DT start"
+      },
+      "cooling_buffer_dt_start": {
+        "name": "Cooling buffer DT start"
+      },
+      "pool_configured_temperature": {
+        "name": "Pool configured temperature"
+      },
+      "pool_dt_start": {
+        "name": "Pool DT start"
+      },
+      "heating_dt_heating": {
+        "name": "Heating DT heating"
+      },
+      "dg1_room_target_temperature": {
+        "name": "DG1 room target temperature"
+      },
+      "sg2_room_target_temperature": {
+        "name": "SG2 room target temperature"
+      },
+      "sg3_room_target_temperature": {
+        "name": "SG3 room target temperature"
+      },
+      "sg4_room_target_temperature": {
+        "name": "SG4 room target temperature"
+      },
+      "sg5_room_target_temperature": {
+        "name": "SG5 room target temperature"
+      },
+      "dg1_room_dt_start": {
+        "name": "DG1 room DT start"
+      },
+      "sg2_room_dt_start": {
+        "name": "SG2 room DT start"
+      },
+      "sg3_room_dt_start": {
+        "name": "SG3 room DT start"
+      },
+      "sg4_room_dt_start": {
+        "name": "SG4 room DT start"
+      },
+      "sg5_room_dt_start": {
+        "name": "SG5 room DT start"
+      },
+      "heating_connection_type_raw": {
+        "name": "Heating connection type raw"
+      },
+      "dhw_priority_selection_raw": {
+        "name": "DHW priority selection raw"
+      },
+      "heating_priority_selection_raw": {
+        "name": "Heating priority selection raw"
+      },
+      "pool_priority_selection_raw": {
+        "name": "Pool priority selection raw"
+      },
+      "cooling_priority_selection_raw": {
+        "name": "Cooling priority selection raw"
+      },
+      "available_priority_levels_raw": {
+        "name": "Available priority levels raw"
+      },
+      "dhw_minimum_compressor_capacity": {
+        "name": "DHW minimum compressor capacity"
+      },
+      "dhw_maximum_compressor_capacity": {
+        "name": "DHW maximum compressor capacity"
+      },
+      "heating_minimum_compressor_capacity": {
+        "name": "Heating minimum compressor capacity"
+      },
+      "heating_maximum_compressor_capacity": {
+        "name": "Heating maximum compressor capacity"
+      },
+      "pool_minimum_compressor_capacity": {
+        "name": "Pool minimum compressor capacity"
+      },
+      "pool_maximum_compressor_capacity": {
+        "name": "Pool maximum compressor capacity"
+      },
+      "cooling_minimum_compressor_capacity": {
+        "name": "Cooling minimum compressor capacity"
+      },
+      "cooling_maximum_compressor_capacity": {
+        "name": "Cooling maximum compressor capacity"
+      },
+      "dg1_heating_adjustment": {
+        "name": "DG1 heating adjustment"
+      },
+      "sg2_heating_adjustment": {
+        "name": "SG2 heating adjustment"
+      },
+      "sg3_heating_adjustment": {
+        "name": "SG3 heating adjustment"
+      },
+      "sg4_heating_adjustment": {
+        "name": "SG4 heating adjustment"
+      },
+      "sg5_heating_adjustment": {
+        "name": "SG5 heating adjustment"
+      },
+      "operating_mode_input_1_raw": {
+        "name": "Operating mode input 1 raw"
+      },
+      "operating_mode_input_2_raw": {
+        "name": "Operating mode input 2 raw"
+      },
+      "operating_mode_input_3_raw": {
+        "name": "Operating mode input 3 raw"
+      },
+      "operating_mode_input_4_raw": {
+        "name": "Operating mode input 4 raw"
+      },
+      "active_demand_slot_1": {
+        "name": "Active demand slot 1"
+      },
+      "active_demand_slot_2": {
+        "name": "Active demand slot 2"
+      },
+      "active_demand_slot_3": {
+        "name": "Active demand slot 3"
+      },
+      "active_demand_slot_4": {
+        "name": "Active demand slot 4"
+      },
+      "dg1_room_terminal_type_raw": {
+        "name": "DG1 room terminal type raw"
+      },
+      "sg2_room_terminal_type_raw": {
+        "name": "SG2 room terminal type raw"
+      },
+      "sg3_room_terminal_type_raw": {
+        "name": "SG3 room terminal type raw"
+      },
+      "sg4_room_terminal_type_raw": {
+        "name": "SG4 room terminal type raw"
+      },
+      "sg5_room_terminal_type_raw": {
+        "name": "SG5 room terminal type raw"
+      },
+      "compressor_delay_setting_raw": {
+        "name": "Compressor delay setting raw"
+      },
+      "heating_service_configured": {
+        "name": "Heating service configured"
+      },
+      "heating_production_pump_enabled": {
+        "name": "Heating production pump enabled"
+      },
+      "dg1_heating_configured": {
+        "name": "DG1 heating configured"
+      },
+      "sg2_heating_configured": {
+        "name": "SG2 heating configured"
+      },
+      "sg3_heating_configured": {
+        "name": "SG3 heating configured"
+      },
+      "sg4_heating_configured": {
+        "name": "SG4 heating configured"
+      },
+      "sg5_heating_configured": {
+        "name": "SG5 heating configured"
+      },
+      "dg1_heating_curve_selected": {
+        "name": "DG1 heating curve selected"
+      },
+      "sg2_heating_curve_selected": {
+        "name": "SG2 heating curve selected"
+      },
+      "sg3_heating_curve_selected": {
+        "name": "SG3 heating curve selected"
+      },
+      "sg4_heating_curve_selected": {
+        "name": "SG4 heating curve selected"
+      },
+      "sg5_heating_curve_selected": {
+        "name": "SG5 heating curve selected"
+      },
+      "dhw_service_configured": {
+        "name": "DHW service configured"
+      },
+      "pool_service_configured": {
+        "name": "Pool service configured"
+      },
+      "pool_production_pump_enabled": {
+        "name": "Pool production pump enabled"
+      },
+      "passive_cooling_configured": {
+        "name": "Passive cooling configured"
+      },
+      "active_cooling_configured": {
+        "name": "Active cooling configured"
+      },
+      "heating_user_enabled": {
+        "name": "Heating user enabled"
+      },
+      "high_evaporation_temperature_alarm": {
+        "name": "High evaporation temperature alarm"
+      },
+      "brine_outlet_probe_alarm": {
+        "name": "Brine outlet probe alarm"
+      },
+      "brine_inlet_probe_alarm": {
+        "name": "Brine inlet probe alarm"
+      },
+      "brine_pressure_probe_alarm": {
+        "name": "Brine pressure probe alarm"
+      },
+      "production_outlet_probe_alarm": {
+        "name": "Production outlet probe alarm"
+      },
+      "production_inlet_probe_alarm": {
+        "name": "Production inlet probe alarm"
+      },
+      "production_pressure_probe_alarm": {
+        "name": "Production pressure probe alarm"
+      },
+      "compressor_suction_pressure_probe_alarm": {
+        "name": "Compressor suction pressure probe alarm"
+      },
+      "compressor_suction_temperature_probe_alarm": {
+        "name": "Compressor suction temperature probe alarm"
+      },
+      "compressor_discharge_pressure_probe_alarm": {
+        "name": "Compressor discharge pressure probe alarm"
+      },
+      "compressor_discharge_temperature_probe_alarm": {
+        "name": "Compressor discharge temperature probe alarm"
+      },
+      "expansion_valve_motor_alarm": {
+        "name": "Expansion valve motor alarm"
+      },
+      "dhw_tank_probe_alarm": {
+        "name": "DHW tank probe alarm"
+      },
+      "dhw_return_probe_alarm": {
+        "name": "DHW return probe alarm"
+      },
+      "sg2_temperature_probe_alarm": {
+        "name": "SG2 temperature probe alarm"
+      },
+      "sg3_temperature_probe_alarm": {
+        "name": "SG3 temperature probe alarm"
+      },
+      "sg4_temperature_probe_alarm": {
+        "name": "SG4 temperature probe alarm"
+      },
+      "sg5_boiler_temperature_probe_alarm": {
+        "name": "SG5 boiler temperature probe alarm"
+      },
+      "heating_buffer_probe_alarm": {
+        "name": "Heating buffer probe alarm"
+      },
+      "cooling_buffer_probe_alarm": {
+        "name": "Cooling buffer probe alarm"
+      },
+      "pool_temperature_probe_alarm": {
+        "name": "Pool temperature probe alarm"
+      },
+      "outdoor_temperature_probe_alarm": {
+        "name": "Outdoor temperature probe alarm"
+      },
+      "safety_shutdown_alarm": {
+        "name": "Safety shutdown alarm"
+      },
+      "bus_communication_alarm": {
+        "name": "BUS communication alarm"
+      },
+      "wrong_model_selection_alarm": {
+        "name": "Wrong model selection alarm"
+      },
+      "priority_configuration_alarm": {
+        "name": "Priority configuration alarm"
+      },
+      "manual_emergency_alarm": {
+        "name": "Manual emergency alarm"
+      },
+      "inverter_alarm": {
+        "name": "Inverter alarm"
+      },
+      "monthly_condensation_energy_mwh_flag": {
+        "name": "Monthly condensation energy MWh flag"
+      },
+      "monthly_evaporation_energy_mwh_flag": {
+        "name": "Monthly evaporation energy MWh flag"
+      },
+      "monthly_electrical_energy_mwh_flag": {
+        "name": "Monthly electrical energy MWh flag"
+      },
+      "annual_condensation_energy_mwh_flag": {
+        "name": "Annual condensation energy MWh flag"
+      },
+      "annual_evaporation_energy_mwh_flag": {
+        "name": "Annual evaporation energy MWh flag"
+      },
+      "annual_electrical_energy_mwh_flag": {
+        "name": "Annual electrical energy MWh flag"
+      },
+      "pool_user_enabled": {
+        "name": "Pool user enabled"
+      },
+      "pool_remote_enabled": {
+        "name": "Pool remote enabled"
+      },
+      "tht_zone_1_alarm": {
+        "name": "THT zone 1 alarm"
+      },
+      "tht_zone_2_alarm": {
+        "name": "THT zone 2 alarm"
+      },
+      "tht_zone_3_alarm": {
+        "name": "THT zone 3 alarm"
+      },
+      "tht_zone_4_alarm": {
+        "name": "THT zone 4 alarm"
+      },
+      "tht_zone_5_alarm": {
+        "name": "THT zone 5 alarm"
+      },
+      "thtune_zone_1_alarm": {
+        "name": "THTune zone 1 alarm"
+      },
+      "thtune_zone_2_alarm": {
+        "name": "THTune zone 2 alarm"
+      },
+      "thtune_zone_3_alarm": {
+        "name": "THTune zone 3 alarm"
+      },
+      "thtune_zone_4_alarm": {
+        "name": "THTune zone 4 alarm"
+      },
+      "thtune_zone_5_alarm": {
+        "name": "THTune zone 5 alarm"
       }
     },
     "number": {

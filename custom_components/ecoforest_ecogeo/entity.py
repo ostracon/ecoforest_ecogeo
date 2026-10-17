@@ -43,6 +43,8 @@ SENSOR_TYPES = {
         "class": SensorDeviceClass.ENERGY,
         "unit": UnitOfEnergy.MEGA_WATT_HOUR,
     },
+    "raw": {},
+    "percent": {"unit": "%"},
     "measurement": {"state_class": SensorStateClass.MEASUREMENT},
     "enum": {"class": SensorDeviceClass.ENUM},
 }
@@ -73,6 +75,7 @@ class EcoforestEntity(CoordinatorEntity[EcoforestCoordinator]):
             self.entity_description = EcoforestSensorEntityDescription(
                 key=key,
                 translation_key=key,
+                options=list(definition["enum"].values()) if "enum" in definition else None,
                 native_unit_of_measurement=(
                     SENSOR_TYPES[definition["entity_type"]]["unit"]
                     if "unit" in SENSOR_TYPES[definition["entity_type"]].keys()

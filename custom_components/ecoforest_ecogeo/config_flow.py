@@ -38,6 +38,7 @@ class EcoForestEcoGeoConfigFlow(ConfigFlow, domain=DOMAIN):
         errors: dict[str, str] = {}
 
         if user_input is not None:
+            api = None
             try:
                 api = EcoGeoApi(
                     user_input[CONF_HOST],
@@ -65,6 +66,10 @@ class EcoForestEcoGeoConfigFlow(ConfigFlow, domain=DOMAIN):
                     title=title,
                     data=user_input
                 )
+
+            finally:
+                if api is not None:
+                    await api.async_close()
 
         return self.async_show_form(
             step_id="user",
