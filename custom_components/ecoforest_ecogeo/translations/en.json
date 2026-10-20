@@ -615,40 +615,40 @@
         "name": "Jun_HeatEM Heating production June"
       },
       "log_brine_return_temperature": {
-        "name": "Log: Brine return temperature"
+        "name": "Alarm record word 2 / inverter A1H"
       },
       "log_brine_supply_temperature": {
-        "name": "Log: Brine supply temperature"
+        "name": "Alarm record word 1 / inverter A1L"
       },
       "log_compressor_rpm": {
-        "name": "Log: Compressor RPM"
+        "name": "Alarm record word 9 / inverter EWL"
       },
       "log_discharge_pressure": {
-        "name": "Log: Discharge pressure"
+        "name": "Alarm record word 6 / inverter W1H"
       },
       "log_evaporation_temperature": {
-        "name": "Log: Evaporation temperature"
+        "name": "Alarm record word 12 / inverter EWH"
       },
       "log_hvac_return_temperature": {
-        "name": "Log: HVAC return temperature"
+        "name": "Alarm record word 4 / inverter A2H"
       },
       "log_hvac_supply_temperature": {
-        "name": "Log: HVAC supply temperature"
+        "name": "Alarm record word 3 / inverter A2L"
       },
       "log_operating_mode": {
-        "name": "Log: Operating mode"
+        "name": "Alarm record word 11 / inverter DI"
       },
       "log_operating_state": {
-        "name": "Log: Operating state"
+        "name": "Alarm record word 10 / inverter SW"
       },
       "log_suction_pressure": {
-        "name": "Log: Suction pressure"
+        "name": "Alarm record word 5 / inverter W1L"
       },
       "log_superheat": {
-        "name": "Log: Superheat"
+        "name": "Alarm record word 7 / inverter W2L"
       },
       "log_valve_opening": {
-        "name": "Log: Valve opening %"
+        "name": "Alarm record word 8 / inverter W2H"
       },
       "low_brine_pressure_alarm": {
         "name": "Low brine-pressure alarm"
@@ -780,7 +780,7 @@
         "name": "Production temperature Out"
       },
       "ref_show_actual_reference": {
-        "name": "REF_show (actual reference)"
+        "name": "Compressor reference actual"
       },
       "reg_bc_climate_pump_regulation": {
         "name": "Reg_BC Climate pump regulation %"
@@ -882,7 +882,7 @@
         "name": "Set_Refrig_EXT_5 External cooling setpoint 5"
       },
       "set_speed_ref_show": {
-        "name": "Set_Speed_REF_show"
+        "name": "Compressor reference command"
       },
       "setpoint_dhw_bus": {
         "name": "Setpoint DHW (BUS)"
